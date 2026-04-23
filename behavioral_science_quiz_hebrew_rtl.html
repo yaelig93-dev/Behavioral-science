@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2457d6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="מדעי ההתנהגות">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%232457d6'/%3E%3Ctext x='90' y='78' font-size='34' text-anchor='middle' fill='white' font-family='Arial'%3Eמדעי%3C/text%3E%3Ctext x='90' y='118' font-size='26' text-anchor='middle' fill='white' font-family='Arial'%3Eההתנהגות%3C/text%3E%3C/svg%3E">
+<title>פלטפורמת תרגול – מדעי ההתנהגות למנהלים</title>
+<style>
+:root {
+  --bg:#f6f8fb; --card:#ffffff; --text:#17212b; --muted:#5f6b7a; --line:#d9e0e8;
+  --accent:#2457d6; --accent-soft:#e9f0ff; --good:#0f8a3d; --good-soft:#ebfff3;
+  --bad:#c4372b; --bad-soft:#fff1ef; --shadow:0 10px 28px rgba(20,37,63,.08); --radius:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding-top:max(0px,env(safe-area-inset-top))}
+html.standalone body{background:linear-gradient(180deg,#eef3ff 0%, var(--bg) 220px)}
+.small{font-size:13px;color:var(--muted)}
+button,select,input,textarea{-webkit-appearance:none;appearance:none}
+.container{max-width:1200px;margin:0 auto;padding:24px;padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.header{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}
+.hero{padding:24px}
+.hero h1{margin:0 0 10px;font-size:clamp(26px,3vw,40px)}
+.hero p{margin:0;color:var(--muted)}
+.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:18px}
+.stat{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fbfcfe}
+.num{font-size:24px;font-weight:800}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:800;margin-left:8px}
+.badge.gray{background:#eef2f7;color:#435066}
+.toolbar{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.appbar{display:none;margin-bottom:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#2457d6,#4f7fff);color:#fff;box-shadow:var(--shadow)}
+.appbar.show{display:block}
+.appbar h2{margin:0 0 6px;font-size:18px}
+.appbar p{margin:0 0 10px;color:rgba(255,255,255,.92)}
+.appbar .row{gap:10px}
+.appbar button{background:#fff;color:#2457d6;font-weight:800}
+.install-sheet{display:none;position:fixed;inset:0;background:rgba(10,17,30,.45);padding:18px;z-index:50;align-items:flex-end;justify-content:center}
+.install-sheet.show{display:flex}
+.install-card{max-width:640px;width:100%;padding:18px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 44px rgba(12,24,48,.22)}
+.install-card h3{margin:0 0 8px;font-size:22px}
+.install-card p{margin:0 0 12px;color:var(--muted)}
+.install-card ol{margin:0 0 16px;padding-right:20px}
+.install-card li{margin:0 0 8px}
+.install-card .hint{font-size:13px;color:var(--muted)}
+.standalone-badge{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--good-soft);color:var(--good);font-weight:700}
+html.standalone .standalone-badge{display:block}
+@media (max-width:720px){
+  .appbar{position:sticky;top:max(10px,env(safe-area-inset-top));z-index:20}
+  button{min-height:46px}
+}
+
+.group{padding:14px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+select,input[type="search"],textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{border:none;border-radius:12px;padding:12px 14px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:46px}
+button.primary{background:var(--accent);color:#fff}
+button.secondary{background:#eef2f7;color:var(--text)}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.main{display:grid;grid-template-columns:1.45fr .75fr;gap:18px;margin-top:18px}
+.quiz{padding:22px}
+.sidebar{padding:18px;display:flex;flex-direction:column;gap:12px}
+.small{font-size:13px;color:var(--muted)}
+.progress{height:10px;background:#edf1f5;border-radius:999px;overflow:hidden}
+.progress > div{height:100%;background:linear-gradient(90deg,var(--accent),#7a9cff);width:0%}
+.qtext{font-size:clamp(21px,2.2vw,30px);font-weight:800;margin:16px 0 18px}
+.options{display:grid;gap:12px}
+.option{padding:15px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;gap:12px;align-items:flex-start}
+.option input{margin-top:4px;transform:scale(1.15)}
+.option.correct{border-color:rgba(15,138,61,.35);background:var(--good-soft)}
+.option.wrong{border-color:rgba(196,55,43,.35);background:var(--bad-soft)}
+.feedback{margin-top:16px;padding:15px 16px;border-radius:14px;border:1px solid var(--line);display:none}
+.feedback.good{display:block;background:var(--good-soft);border-color:rgba(15,138,61,.3)}
+.feedback.bad{display:block;background:var(--bad-soft);border-color:rgba(196,55,43,.25)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border-bottom:none}
+.notice{padding:12px 14px;border-radius:12px;background:#fff9e9;border:1px solid #f0dfaa;color:#6c5715}
+.list{max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fafcff}
+.list-item{padding:10px 12px;border-bottom:1px solid #eef2f7;font-size:14px}
+.list-item:last-child{border-bottom:none}
+.mobile-tools{margin-top:12px;padding:14px;border:1px dashed var(--line);border-radius:14px;background:#fbfcfe}
+.mobile-tools .small{margin-bottom:10px}
+.mobile-note{margin-top:10px;font-size:13px;color:var(--muted)}
+footer{margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
+@media (max-width: 980px){.header,.main,.toolbar{grid-template-columns:1fr}}
+@media (max-width: 640px){.container{padding:14px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));padding-bottom:max(18px,env(safe-area-inset-bottom))}.hero,.meta,.group,.quiz,.sidebar{padding:16px}.row,.nav .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row > *{width:100%}.hero h1{font-size:28px}.qtext{font-size:20px}.option{padding:14px}.badge{margin-bottom:6px}.toolbar{gap:10px}.meta{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="appbar" id="appbar">
+  <h2>נוח יותר באייפון</h2>
+  <p>אפשר להוסיף את התרגול למסך הבית ולקבל חוויה דמוית אפליקציה, בלי לאבד פונקציונליות.</p>
+  <div class="row">
+    <button id="showInstallBtn" type="button">איך מוסיפים למסך הבית</button>
+    <button class="ghost" id="dismissAppbarBtn" type="button" style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3)">סגור</button>
+  </div>
+</div>
+
+  <div class="header">
+    <section class="card hero">
+      <span class="badge">RTL</span><span class="badge gray">HTML אחד</span>
+      <h1>פלטפורמת תרגול אינטראקטיבית – מדעי ההתנהגות למנהלים</h1>
+      <p>מבוסס אך ורק על חומרי הפרויקט שהועלו. נשמר מקומית בדפדפן באמצעות localStorage, עם מצב מבחן, סינון, ערבוב ותרגול טעויות.</p>
+      <div class="small" id="progressTextTop" style="margin:14px 0 8px">נטען…</div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="row" style="margin-top:16px">
+        <button class="primary" id="submitBtn" type="button">בדיקת תשובה</button>
+        <button class="secondary" id="nextBtn" type="button">השאלה הבאה</button>
+        <button class="ghost" id="prevBtn" type="button">השאלה הקודמת</button>
+        <button class="ghost" id="shuffleBtn" type="button">ערבוב שאלות</button>
+      </div>
+    </section>
+    <aside class="card meta">
+      <div class="stat"><div class="small">מספר שאלות</div><div class="num" id="totalQuestions"></div></div>
+      <div class="stat"><div class="small">פרקים</div><div class="num" id="totalChapters"></div></div>
+      <div class="stat"><div class="small">נכונות</div><div class="num" id="correctCount">0</div></div>
+      <div class="stat"><div class="small">ציון מצטבר</div><div class="num" id="scorePct">0%</div></div>
+      <div class="stat" style="grid-column:1/-1"><div class="small">מצב שמור</div><div id="saveStatus">טרם נטען</div></div>
+    </aside>
+  </div>
+
+  <div class="toolbar">
+    <section class="card group">
+      <label for="chapterFilter">סינון לפי פרק</label>
+      <select id="chapterFilter"></select>
+    </section>
+    <section class="card group">
+      <label for="topicFilter">סינון לפי נושא</label>
+      <select id="topicFilter"></select>
+    </section>
+    <section class="card group">
+      <label for="searchBox">חיפוש חופשי</label>
+      <input id="searchBox" type="search" placeholder="מילת מפתח מתוך שאלה או נושא">
+    </section>
+    <section class="card group">
+      <label>אפשרויות תרגול</label>
+      <div class="row">
+        <button class="secondary" id="mistakesBtn" type="button">תרגל רק טעויות</button>
+        <button class="secondary" id="examModeBtn" type="button">מצב מבחן: כבוי</button>
+        <button class="ghost" id="resetBtn" type="button">איפוס התקדמות</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="main">
+    <section class="card quiz">
+      <div class="small" id="positionLabel"></div>
+      <div style="margin-top:10px">
+        <span class="badge" id="chapterBadge"></span>
+        <span class="badge gray" id="topicBadge"></span>
+      </div>
+      <div class="qtext" id="questionText"></div>
+      <form id="optionsForm" class="options"></form>
+      <div id="feedbackBox" class="feedback"></div>
+      <div class="nav">
+        <div class="small">במצב מבחן, הבחירה נשמרת אבל המשוב וההסבר לא יופיעו עד ללחיצה על “בדיקת תשובה”.</div>
+        <div class="row">
+          <button class="ghost" id="jumpRandomBtn" type="button">שאלה אקראית</button>
+          <button class="ghost" id="toggleAnsweredBtn" type="button">הצג רק לא פתורות</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card sidebar">
+      <div class="kv"><strong>שאלה נוכחית</strong><span id="currentId"></span></div>
+      <div class="kv"><strong>נענו</strong><span id="answeredCount">0</span></div>
+      <div class="kv"><strong>טעויות שמורות</strong><span id="mistakesCount">0</span></div>
+      <div class="kv"><strong>מצב תרגול</strong><span id="modeLabel">רגיל</span></div>
+      <div class="notice">המערכת פועלת כקובץ מקומי אחד. אין תלות בקבצים חיצוניים.</div>
+      <div class="mobile-tools">
+        <div class="small"><strong>גיבוי לאייפון</strong></div>
+        <div class="row">
+          <button class="secondary" id="copyBackupBtn" type="button">העתק קוד גיבוי</button>
+          <button class="ghost" id="restoreBackupBtn" type="button">שחזר מקוד גיבוי</button>
+        </div>
+        <div class="mobile-note">מומלץ באייפון להעתיק קוד גיבוי מדי פעם. כך אפשר לשחזר גם אם Safari מנקה נתונים מקומיים.</div>
+      </div>
+      <div><div class="small" style="margin-bottom:8px">פרקים זמינים</div><div class="list" id="chapterList"></div></div>
+      <div><div class="small" style="margin-bottom:8px">נושאים זמינים</div><div class="list" id="topicList"></div></div>
+    </aside>
+  </div>
+
+  <footer>מבוסס על החומרים שהועלו בפרויקט בלבד.</footer>
+</div>
+
+<script>
+const QUESTIONS = [{"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טיילור", "question": "מפעל שסובל משונות גבוהה בין עובדים מחליט לפרק כל משימה לתנועות קטנות, למדוד זמנים ולרכז את התכנון אצל המנהלים. איזו הנחת יסוד ניהולית מובילה את המהלך?", "options": ["שהעובד מונע בעיקר מהשתייכות לקבוצה", "שקיימת דרך מיטבית אחת לבצע כל משימה אם מודדים ומנתחים אותה", "שהמבנה הארגוני צריך להיות גמיש ולא פורמלי", "שהתפוקה עולה בעיקר מעצם תשומת הלב לעובדים"], "correct": 1, "explanation": "זהו לב הניהול המדעי של טיילור: חיפוש One Best Way באמצעות מדידה, פירוק משימות וריכוז התכנון בדרג הניהולי."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טיילור", "question": "איזה ממצא יהיה הביקורת החזקה ביותר על יישום קיצוני של ניהול מדעי בארגון ידע?", "options": ["ירידה בסטנדרטיזציה של התהליך", "עלייה באי-בהירות תפקיד", "פגיעה ביצירתיות ובתחושת המשמעות של העובדים למרות שיפור במדידה", "צמצום ביכולת למדוד זמנים ותפוקות"], "correct": 2, "explanation": "הביקורת המרכזית על טיילור בחומר היא ראיית האדם כאמצעי ייצור והתעלמות מיצירתיות, צרכים אנושיים ופוטנציאל מעבר לביצוע."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "ובר", "question": "מנכ״ל מעוניין להבטיח אחידות, קווי סמכות ברורים, נהלים קבועים וגיוס המבוסס על קריטריונים פורמליים. לאיזו גישה הוא הכי קרוב?", "options": ["גישת יחסי אנוש", "הניהול הבירוקרטי של ובר", "מודל TOP", "תיאוריית ההוגנות"], "correct": 1, "explanation": "ובר מדגיש פורמליזציה, היררכיה, חלוקת תפקידים וכללים אחידים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "ובר", "question": "איזו תופעה צפויה במיוחד בארגון שמאמץ בירוקרטיה קלאסית ללא איזונים?", "options": ["שחיקה בגלל עודף עבודת רגשות", "יצירתיות גבוהה אך כאוס תפעולי", "איטיות וקושי להגיב לשינויים בסביבה", "עיוותים שנובעים מעודף שיתוף רגשי"], "correct": 2, "explanation": "אחת הביקורות המרכזיות על בירוקרטיה בחומר היא נוקשות ואיטיות מול שינוי."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "הות'ורן", "question": "חברה משנה תאורה, הפסקות וסידור עבודה, ובכל מצב כמעט התפוקה עולה. איזה פירוש הכי תואם את מחקרי הות'ורן?", "options": ["השיפור נובע בעיקר מהגדלת השכר", "עצם תשומת הלב והתחושה שהעובדים חשובים משפיעות על תפוקה", "התנאים הפיזיים תמיד חשובים יותר מהחברתיים", "העלייה בפריון מוכיחה שהיררכיה פורמלית חזקה"], "correct": 1, "explanation": "מסקנת הות'ורן היא שגורמים חברתיים ותשומת לב משפיעים מאוד על תפוקה; זהו אפקט הות'ורן."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "יחסי אנוש", "question": "מנהל משקיע בחיזוק שייכות, עבודת צוות ושביעות רצון, מתוך הנחה שאלו ישפיעו על תפוקה. איזו גישה הוא מאמץ?", "options": ["גישת יחסי אנוש", "ניהול מדעי", "ניהול בירוקרטי קלאסי", "מודל SMARTER"], "correct": 0, "explanation": "גישת יחסי אנוש צמחה לאחר הות'ורן ומדגישה צרכים חברתיים, מוטיבציה ודינמיקה קבוצתית."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "קונטקסט", "question": "שני צוותים מיישמים את אותו מודל ניהולי, אך באחד הוא מצליח ובשני נכשל בגלל תרבות, רגולציה והרכב עובדים שונים. מהי המסקנה הנכונה ביותר?", "options": ["מודלים ניהוליים תקפים רק בארגונים גלובליים", "אין טעם לחקור התנהגות ארגונית באופן שיטתי", "הקשר הארגוני משנה את האופן שבו תיאוריות פועלות בפועל", "הבדלים בין צוותים מוסברים רק על ידי אישיות המנהלים"], "correct": 2, "explanation": "בחומר מודגש שלקונטקסט יש משמעות: מבנה, תרבות, סביבה ומאפיינים אישיים מעצבים התנהגות ארגונית."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "מחקר שיטתי", "question": "איזה שימוש באינטואיציה יהיה הבעייתי ביותר לפי השיעור על מחקר שיטתי?", "options": ["שימוש בה כנקודת פתיחה לשאלה מחקרית", "שילובה עם נתונים והקשר", "הסקת מסקנות על עובדים בלי בחינת משתנים וממצאים", "היעזרות בה להבנת דינמיקה ראשונית"], "correct": 2, "explanation": "החומר מדגיש שאינטואיציה לבדה עלולה להוביל לטעויות, ולכן יש לשלב מחקר שיטתי ובחינת קשרים בין משתנים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "Big Five", "question": "לתפקיד שדורש עמידה בדדליינים, סדר ועמידה בסטנדרטים גבוהים, איזו תכונה תהיה בדרך כלל הרלוונטית ביותר?", "options": ["פתיחות לניסיון", "מצפוניות", "מוחצנות", "נועם"], "correct": 1, "explanation": "מצפוניות כוללת ארגון, אחריות וסטנדרטים גבוהים, ולכן רלוונטית במיוחד למשימות תובעניות ומדויקות."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "Big Five", "question": "איזה עובד צפוי בדרך כלל להסתגל טוב יותר לעמימות ושינויים תכופים?", "options": ["עובד עם יציבות רגשית גבוהה", "עובד עם נועם גבוה בלבד", "עובד עם כוח פורמלי גבוה", "עובד עם מומחיות טכנית בלבד"], "correct": 0, "explanation": "יציבות רגשית קשורה ליכולת להתמודד עם לחץ ועמימות."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "Big Five", "question": "איזה שילוב תכונות עשוי להיות בעל ערך מיוחד בצוות חדשנות?", "options": ["מצפוניות בלבד", "פתיחות לניסיון לצד יכולת עבודה עם אחרים", "יציבות רגשית בלבד", "מוחצנות ללא כל תכונה נוספת"], "correct": 1, "explanation": "החומר מקשר פתיחות לסקרנות, יצירתיות וגמישות, ובצוותים גם שיתוף פעולה חשוב."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "כוח", "question": "לעובד אין תפקיד ניהולי, אבל כולם פונים אליו כי הוא היחיד שמבין מערכת קריטית ויכול לפתור בעיות מורכבות. איזה מקור כוח בולט כאן?", "options": ["כוח תגמול", "כוח פורמלי", "כוח מומחיות", "כוח זיקה"], "correct": 2, "explanation": "כוח מומחיות נובע מידע ומיומנויות ייחודיות."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "כוח", "question": "מנהלת מצליחה להשפיע משום שעובדים רוצים לעבוד איתה, מאמינים לה ונמשכים לכריזמה שלה. זהו בעיקר:", "options": ["כוח מידע", "כוח אישי", "כוח תגמול", "כוח פורמלי"], "correct": 1, "explanation": "כוח אישי בחומר מתואר ככריזמה ואמינות אישית."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טקטיקות השפעה", "question": "מנהל מציג נתונים, מחקרים ודוגמאות כדי לשכנע הנהלה לאשר שינוי תהליך. באיזו טקטיקה הוא משתמש בעיקר?", "options": ["פנייה לרגש", "שכנוע רציונלי", "הפעלת לחץ", "קואליציה"], "correct": 1, "explanation": "שכנוע רציונלי מבוסס על עובדות, היגיון וממצאים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טקטיקות השפעה", "question": "עובד מגייס מראש בעלי ברית ממספר מחלקות כדי לקדם יוזמה. איזו טקטיקה ניהולית זה משקף?", "options": ["הפעלת לחץ", "פנייה למעלה", "בניית קואליציות", "משוב רציף"], "correct": 2, "explanation": "בניית קואליציות היא רתימת שותפים אסטרטגיים בעלי אינטרסים משותפים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טקטיקות השפעה", "question": "באיזה מצב הפעלת לחץ היא הטקטיקה הפחות מתאימה?", "options": ["כשצריך פעולה מיידית במצב חירום ברור", "כשמבקשים לבנות מחויבות ארוכת טווח ואמון", "כשקיים דדליין קשיח מאוד", "כשסמכות פורמלית ברורה"], "correct": 1, "explanation": "בחומר מצוין שלחץ עלול לפגוע ביחסים ובמוטיבציה, ולכן הוא חלש במיוחד כשמטרת העל היא מחויבות מתמשכת."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "Person-Job Fit", "question": "למה הבנת הבדלים אינדיווידואליים חשובה במיוחד בגיוס?", "options": ["כי היא מחליפה את הצורך בהכשרה", "כי היא מאפשרת התאמה טובה יותר בין מאפייני אדם לדרישות התפקיד", "כי היא מבטלת השפעת תרבות ארגונית", "כי היא מבטיחה ביצועים זהים בין עובדים"], "correct": 1, "explanation": "החומר מדגיש התאמת אישיות ותכונות לדרישות התפקיד ולבניית צוותים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "קונטקסט", "question": "איזו מסקנה משקפת הכי טוב את החיבור בין אישיות לבין הקשר ארגוני?", "options": ["אישיות קובעת התנהגות בלי תלות בסביבה", "הקשר חשוב רק ברמת הארגון ולא ברמת הפרט", "התנהגות נוצרת מאינטראקציה בין מאפייני האדם לבין מאפייני הסביבה", "רק רגולציה חיצונית מסבירה התנהגות"], "correct": 2, "explanation": "החומר מדגיש גומלין בין תרבות, מבנה, סביבה ומאפיינים אישיים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "גישות ניהול", "question": "איזו אמירה משקפת מעבר היסטורי נכון בגישות ניהול?", "options": ["מהניהול המדעי אל יחסי אנוש — מעבר מהתמקדות ביעילות טכנית להכרה בגורם האנושי", "מיחסי אנוש אל בירוקרטיה — מעבר ממוטיבציה לפורמליזציה", "מבירוקרטיה אל טיילור — מעבר מהיררכיה לפירוק משימות", "ממחקר שיטתי אל אינטואיציה — מעבר לדיוק גבוה יותר"], "correct": 0, "explanation": "זהו הציר ההיסטורי שהודגש בשיעור: מטכניות וסטנדרטיזציה להכרה במוטיבציה, שביעות רצון ודינמיקה חברתית."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "הות'ורן וקונטקסט", "question": "ארגון מסיק מניסוי פנימי שכל שינוי פיזי קטן ישפר תמיד תפוקה. למה זו מסקנה חלשה?", "options": ["כי התפוקה תמיד מוסברת רק בידי שכר", "כי אפקט הות'ורן מזכיר שעצם המחקר ותשומת הלב עשויים להסביר חלק מהשיפור", "כי אין דרך למדוד תפוקה בארגונים", "כי תנאים פיזיים לעולם אינם חשובים"], "correct": 1, "explanation": "הות'ורן מראה שלא נכון לייחס אוטומטית שינוי בתפוקה רק לגורם הפיזי הנבדק."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מאסלו", "question": "ארגון מספק לעובד שכר יציב וביטחון תעסוקתי, אך הוא עדיין עוזב כי אינו מרגיש שייך לצוות. איזו פרשנות הכי מתאימה?", "options": ["סופקו כל הצרכים ולכן העזיבה לא קשורה למוטיבציה", "צורכי ביטחון סופקו, אך צורך חברתי נותר חסר", "מאסלו טען שרק מימוש עצמי מניע עובדים", "הוגנות פרוצדורלית תמיד חשובה יותר מצורכי שייכות"], "correct": 1, "explanation": "לפי מאסלו, שייכות היא צורך מרכזי; סיפוק צרכי ביטחון לא מבטל את חשיבות הצרכים החברתיים."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מאסלו", "question": "איזו אמירה משקפת את ההרחבות המודרניות לתיאוריית מאסלו כפי שהוצגו בקורס?", "options": ["הצרכים תמיד מתקיימים בסדר קשיח וזהה בין תרבויות", "היררכיית הצרכים דינמית, וייתכנו הבדלים בין תרבויות ובין אנשים", "מימוש עצמי בוטל כצורך רלוונטי", "רק צרכים חומריים מניעים בעבודה"], "correct": 1, "explanation": "החומר מציג ביקורת והרחבות: סדר לא קשיח, הבדלים תרבותיים, ואף טרנסצנדנציה."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מאסלו", "question": "מנהלת מקימה תכנית התנדבות קהילתית ומחברת את העבודה לערכים ומשמעות רחבה. לאיזו הרחבה של מאסלו זה קשור במיוחד?", "options": ["צרכים פיזיולוגיים", "צדק חלוקתי", "טרנסצנדנציה", "כוח תגמול"], "correct": 2, "explanation": "ההרחבה לטרנסצנדנציה מתייחסת לחריגה מעבר לעצמי, תרומה לאחרים ומשמעות רחבה."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הרצברג", "question": "איזה מהלך צפוי בעיקר להפחית אי-שביעות רצון אך לא בהכרח לייצר מוטיבציה גבוהה?", "options": ["מתן אחריות ואתגר מקצועי", "הוספת משמעות לתפקיד", "שיפור תנאי השכר והבהרת מדיניות ארגונית", "פיתוח מסלול צמיחה אישי"], "correct": 2, "explanation": "לפי הרצברג, גורמי היגיינה מונעים אי-שביעות רצון אך אינם יוצרים לבדם מוטיבציה גבוהה."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הרצברג", "question": "איזה צירוף מייצג את 'השילוב האופטימלי' לפי הרצברג?", "options": ["רק גורמי היגיינה חזקים", "רק גורמי מוטיבציה פנימיים", "גורמי היגיינה מספקים בסיס יציב וגורמי מוטיבציה מייצרים מחוברות והנעה", "היעדר תגמול חיצוני אך הרבה אוטונומיה"], "correct": 2, "explanation": "החומר מדגיש ששילוב בין גורמים חיצוניים בסיסיים לבין גורמים פנימיים הוא האופטימלי."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הרצברג", "question": "עובדת מקבלת העלאת שכר, אבל ממשיכה לדווח על שעמום וחוסר משמעות. איזו מסקנה הכי סבירה?", "options": ["השכר לא היה הוגן מלכתחילה ולכן אין השפעה", "העלאת שכר טיפלה בהיגיינה, אך לא בגורמי מוטיבציה פנימיים", "מאסלו מנבא תמיד שמימוש עצמי ייעלם אחרי העלאת שכר", "משוב שוטף תמיד פותר בעיות מוטיבציה"], "correct": 1, "explanation": "לפי הרצברג, שכר הוא גורם היגייני; אם אין הישגיות, משמעות או אתגר, המוטיבציה עשויה להישאר נמוכה."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "צדק ארגוני", "question": "עובד לא קיבל קידום, אך אומר שהיה יכול לקבל את ההחלטה אם התהליך היה עקבי, שקוף וניתן לערעור. על איזה ממד צדק הוא מדבר בעיקר?", "options": ["צדק חלוקתי", "צדק פרוצדורלי", "צדק אינטראקציוניי", "טרנסצנדנציה"], "correct": 1, "explanation": "צדק פרוצדורלי עוסק בהוגנות תהליך קבלת ההחלטות."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "צדק ארגוני", "question": "מנהלת מעבירה החלטה לא פופולרית, אבל עושה זאת בכבוד, בהקשבה ובהסבר מלא. איזה ממד צדק מתחזק כאן במיוחד?", "options": ["חלוקתי", "פרוצדורלי", "אינטראקציוני", "תפעולי"], "correct": 2, "explanation": "צדק אינטראקציוני עוסק ביחס בין-אישי ובהסברים שמקבלים עובדים."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "צדק ארגוני", "question": "שני עובדים עם אותו תפקיד ואותו ותק מגלים פער שכר לא מוסבר. איזה סוג צדק יעמוד קודם במוקד הפגיעה?", "options": ["צדק חלוקתי", "צדק פרוצדורלי בלבד", "צדק אינטראקציוני בלבד", "צדק של טרנסצנדנציה"], "correct": 0, "explanation": "צדק חלוקתי עוסק בהוגנות התוצאות והחלוקה של משאבים ותגמולים."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "תיאוריית ההוגנות", "question": "עובדת מפחיתה מאמץ אחרי שגילתה שקולגה מקבל תגמול גבוה יותר על אותה השקעה. איזו דינמיקה זה משקף?", "options": ["תגובה לירידה ביציבות רגשית", "השוואת תשומות-תפוקות לאחרים לפי תיאוריית ההוגנות", "מעבר מ-Fight ל-Freeze", "חיזוק גורמי היגיינה"], "correct": 1, "explanation": "תיאוריית ההוגנות מדגישה השוואה חברתית בין inputs ל-outputs."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הוגנות", "question": "מה יהיה תיקון ניהולי טוב במיוחד לפגיעה בצדק פרוצדורלי?", "options": ["להעלות שכר לכולם בלי להסביר", "לשפר עקביות, שקיפות, ייצוגיות ויכולת ערעור בתהליך", "להגביר ניטור ביצועים", "להפחית אוטונומיה"], "correct": 1, "explanation": "בחומר צוינו קריטריונים להוגנות פרוצדורלית: עקביות, דיוק, ייצוגיות, אתיקה ויכולת ערעור."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מטרות", "question": "איזו מטרה צפויה לייצר ביצועים טובים יותר לפי לוק?", "options": ["תעשו כמיטב יכולתכם", "ננסה להשתפר בזמן הקרוב", "להעלות שביעות רצון לקוחות ב-10% ברבעון הקרוב תוך משוב דו-שבועי", "שאיפה כללית למצוינות"], "correct": 2, "explanation": "תיאוריית הגדרת המטרות מדגישה מטרות ברורות, ספציפיות, מאתגרות ומשוב מתמשך."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מטרות", "question": "מהו התנאי החשוב ביותר לכך שמטרה מאתגרת תשפר ביצועים במקום לעורר התנגדות?", "options": ["שהיא תישמר בסוד", "שתהיה מחויבות של העובד והבנה של חשיבותה", "שהיא תהיה עמומה מספיק", "שהיא תוחלף כל שבוע"], "correct": 1, "explanation": "החומר מדגיש מחויבות למטרה ומשוב שוטף כתנאים מרכזיים להצלחתה."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מטרות", "question": "איזו אמירה מבטאת נכון את השפעת המטרות על התנהגות?", "options": ["מטרות משפיעות רק על משך המאמץ, לא על הכיוון", "מטרות ברורות משפיעות על כיוון המאמץ, עוצמתו והתמדתו", "מטרות משפיעות רק אם הן קלות מאוד", "מטרות רלוונטיות רק לתגמול כספי"], "correct": 1, "explanation": "זהו ניסוח ישיר מתוך ההיגיון של תיאוריית הגדרת המטרות."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "OKRs", "question": "צוות מגדיר מטרה איכותנית מאתגרת, ואז קובע מדדים כמותיים ברורים לבדיקת ההתקדמות. איזה מודל זה משקף?", "options": ["Maslow", "OKRs", "Johari", "JD-R"], "correct": 1, "explanation": "OKRs מחלקים בין Objective איכותני לבין Key Results כמותיים."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "OKRs", "question": "מה ההבדל המרכזי בין Objective לבין Key Results?", "options": ["Objective הוא תמיד כמותי ו-Key Results תמיד ערכיים", "Objective מתאר לאן רוצים להגיע; Key Results מגדירים כיצד נדע שהצלחנו", "Objective הוא תגמול ו-Key Results הם משאבים", "אין הבדל מהותי"], "correct": 1, "explanation": "זהו ההבדל המרכזי כפי שהוצג במודל OKRs."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "צדק ו-AI/מודרנה", "question": "ארגון עובר למערכת אוטומטית להחלטות תגמול, בלי להסביר קריטריונים. איזה סיכון מוטיבציוני בולט במיוחד?", "options": ["רק פגיעה בצרכים פיזיולוגיים", "פגיעה בתפיסת ההוגנות שתפחית מחויבות ומוטיבציה", "עלייה אוטומטית במוטיבציה פנימית", "היעלמות חשיבותו של מנהל"], "correct": 1, "explanation": "כאשר הקריטריונים אינם שקופים, צדק פרוצדורלי ואינטראקציוני נפגעים ועלולה להיווצר התנגדות."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מאסלו והרצברג", "question": "איזו מדיניות משלבת היטב בין מאסלו להרצברג?", "options": ["רק בונוס כספי שנתי", "רק סדנת משמעות והתפתחות", "בסיס הוגן של שכר וביטחון לצד אתגר, הכרה, אוטונומיה והתפתחות", "החלפת יעדים תכופה ללא יציבות"], "correct": 2, "explanation": "היא נותנת מענה גם לצרכי בסיס/ביטחון וגם לגורמי מוטיבציה פנימיים."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "צדק ארגוני", "question": "למה מנהל שמקבל החלטה קשה אך מסביר אותה בכבוד עשוי לצמצם פגיעה במוטיבציה גם כשאין אפשרות לשנות את התוצאה?", "options": ["כי יחס מכבד מבטל כל צורך בתגמול", "כי עובדים שופטים לא רק תוצאות אלא גם תהליך ויחס", "כי צדק חלוקתי לא חשוב כלל", "כי רק תרבות ארגונית משפיעה על מוטיבציה"], "correct": 1, "explanation": "החומר מדגיש שהוגנות תהליכית ואינטראקציונית משפיעות גם כאשר התוצאה אינה רצויה לעובד."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מוטיבציה", "question": "איזה מקרה מדגים הכי טוב מעבר מהנעה חיצונית בלבד להנעה פנימית?", "options": ["עובד נשאר רק בגלל חוזה ארוך טווח", "עובד משקיע כי העבודה מאתגרת, משמעותית ומאפשרת צמיחה, בנוסף לתגמול הוגן", "עובד מציית כי חושש מסנקציה", "עובד מבצע משימה כי אין לו ברירה"], "correct": 1, "explanation": "החומר מציג מוטיבציה פנימית כקשורה למשמעות, עניין, צמיחה ואתגר, לצד חשיבות בסיס חיצוני הוגן."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "פיתוח מול קידום", "question": "איזו אמירה מבדילה נכון בין פיתוח לבין קידום?", "options": ["פיתוח הוא רק עלייה בשכר; קידום הוא למידה", "קידום מתמקד בשינוי מעמד פורמלי, ופיתוח מתמקד בצמיחה ביכולות ובמיומנויות", "אין הבדל מהותי ביניהם", "פיתוח רלוונטי רק לעובדים חלשים"], "correct": 1, "explanation": "החומר מדגיש שפיתוח אינו שווה קידום: פיתוח הוא צמיחה ולמידה מתמשכת."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי", "question": "מנהל מבקש מחברי צוות לתת לעובד משוב על דפוס שהוא עצמו לא מבחין בו. איזה אזור בחלון ג'והרי מנסים לצמצם?", "options": ["האזור הגלוי", "האזור הסמוי", "האזור העיוור", "האזור הלא-ידוע"], "correct": 2, "explanation": "האזור העיוור כולל מה שאחרים יודעים עליי ואני לא מודע אליו."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי", "question": "עובדת משתפת את מנהלה בחשש אישי שמשפיע על עבודתה, וכך מקבלת תמיכה. איזה שינוי קורה בחלון ג'והרי?", "options": ["הגדלת האזור הסמוי", "הקטנת האזור הגלוי", "הקטנת האזור הסמוי והגדלת האזור הגלוי", "הגדלת האזור העיוור"], "correct": 2, "explanation": "שיתוף מידע אישי/מקצועי מעביר מידע מהאזור הסמוי אל הגלוי."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי", "question": "איזה מהלך יעזור במיוחד להרחיב את האזור הלא-ידוע?", "options": ["להסתמך רק על הערכה שנתית", "להימנע מפרויקטים חדשים כדי לא להיכשל", "לצאת מאזור הנוחות, להתנסות בתפקידים ואתגרים חדשים ולקבל משוב", "להקטין תקשורת בצוות"], "correct": 2, "explanation": "האזור הלא-ידוע כולל פוטנציאל ויכולות שלא מומשו; התנסות ואתגר מסייעים לחשוף אותו."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "חוזקות", "question": "לפי הגישה לניהול לפי חוזקות, מהי 'חוזקה'?", "options": ["כל מיומנות שנלמדה באימון", "יכולת טבעית בלבד", "שימוש עקבי ביכולת טבעית שמעורר תשוקה ומייצר תוצאות", "כל תחום שבו העובד רוצה להשתפר"], "correct": 2, "explanation": "בחומר: חוזקה = יכולת טבעית + תשוקה + שימוש עקבי שמביא לתוצאה רצויה."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "חוזקות", "question": "מנהל טוב בגישת strengths-based יעשה קודם כול:", "options": ["ימפה חולשות מרכזיות ויתקן אותן לפני הכול", "יזהה תחומים שמייצרים אנרגיה, הצטיינות ותוצאות ויתאים להם משימות", "ישווה עובדים רק לממוצע הצוותי", "יימנע ממשוב על חולשות"], "correct": 1, "explanation": "הגישה מדגישה זיהוי חוזקות, התאמת תפקידים ופיתוח על בסיסן."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "חוזקות", "question": "איזה עובד צפוי להפיק הכי הרבה מהתאמה מבוססת חוזקות?", "options": ["עובד שמצליח במשימות אך הן שואבות ממנו אנרגיה לאורך זמן", "עובד שתחום אחריותו חופף ליכולות טבעיות, לתשוקה ולתוצאות עקביות", "עובד שמסכים לכל משימה שהארגון נותן", "עובד שמצטיין רק כשיש לחץ קיצוני"], "correct": 1, "explanation": "זהו בדיוק רעיון החוזקה בחומר."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "TOP", "question": "לפי מודל TOP, מצב שבו יש כישרון ותשוקה אך הארגון לא מספק הזדמנויות מתאימות צפוי להוביל בעיקר ל:", "options": ["מצוינות יציבה", "תסכול", "שעמום נמוך ומחויבות גבוהה", "ביצועים זהים לכל מצב אחר"], "correct": 1, "explanation": "בתרשים האופטימלי של TOP, חוסר התאמה של הארגון מייצר תסכול גם כשיש כישרון ותשוקה."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "TOP", "question": "מה מייצג ה-O במודל TOP כפי שנלמד בקורס?", "options": ["Objective", "Organization – מה הארגון צריך ומאפשר", "Openness", "Outcome"], "correct": 1, "explanation": "בגרסת הקורס: Talent, Passion, Organization."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "TOP", "question": "איזה מצב מייצג התאמה מיטבית לפי TOP?", "options": ["רצון גבוה בלבד", "כישרון בלבד", "תשוקה, כישרון והתאמה לצורכי והזדמנויות הארגון", "ארגון תומך ללא יכולת אישית"], "correct": 2, "explanation": "הצלבה של שלושת המעגלים היא ה-Career Best."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "CPM", "question": "מה ההיגיון המרכזי של Continuous Performance Management?", "options": ["החלפת כל שיח הניהול בבדיקת KPI חודשית", "מעבר ממשוב שנתי כבד למשוב רציף, גמיש ובזמן אמת", "צמצום שיחות משוב כדי למנוע עומס", "התרכזות רק בטעויות הגדולות ביותר"], "correct": 1, "explanation": "CPM מדגיש רציפות, גמישות ולמידה מתמשכת."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "CPM", "question": "למה משוב רציף עשוי להיות אפקטיבי יותר מהערכה שנתית בלבד?", "options": ["כי הוא מבטל את הצורך ביעדים", "כי הוא מתייחס לאירועים קרובים, מאפשר תיקון בזמן אמת ומחזק למידה", "כי הוא תמיד לא פורמלי ולכן מדויק יותר", "כי הוא מונע צורך בשיתוף העובד"], "correct": 1, "explanation": "זהו היתרון המרכזי של CPM בחומר."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "SMARTER", "question": "איזו תוספת הופכת SMART ל-SMARTER?", "options": ["Evidence ו-Review", "Evaluated ו-Revised", "Empathy ו-Respect", "Engagement ו-Reward"], "correct": 1, "explanation": "הקורס הדגיש את E ו-R: Evaluated, Revised."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "SMARTER", "question": "מנהל קובע יעד ברור ומדיד, אך מסרב לעדכן אותו כשהשוק משתנה. איזה רכיב ב-SMARTER נפגע במיוחד?", "options": ["Specific", "Achievable", "Evaluated", "Revised"], "correct": 3, "explanation": "R מדגיש התאמה ושינויים לאורך הדרך."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "SMARTER", "question": "איזו מטרה כתובה בצורה הטובה ביותר?", "options": ["למכור יותר", "לשפר תקשורת", "להעלות ב-15% את שיעור השלמת הפניות עד סוף הרבעון, עם בדיקה חודשית והתאמות לפי הצורך", "לנסות לעבוד טוב יותר"], "correct": 2, "explanation": "המטרה ספציפית, מדידה, תחומה בזמן וכוללת בחינה והתאמה."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "OKRs", "question": "איזה שימוש נכון ב-OKRs בארגון?", "options": ["להציב מטרות עמומות כדי לא להגביל יצירתיות", "לחבר מטרה איכותנית למדדי התקדמות כמותיים ולעקוב רבעונית", "לבטל משוב רציף כי ה-OKR מספיק", "לקשור כל Objective רק לבונוס כספי"], "correct": 1, "explanation": "זה בדיוק אופן השימוש שנלמד."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "שילוב מודלים", "question": "מנהל רוצה לשפר ביצועים בצוות. איזה שילוב הוא ההגיוני ביותר לפי הקורס?", "options": ["להגדיר SMARTER/OKRs, לזהות חוזקות, ולנהל משוב רציף", "להפעיל בעיקר לחץ וסנקציות", "להתרכז רק בהערכה שנתית", "לבטל יעדים כדי לא לפגוע באוטונומיה"], "correct": 0, "explanation": "החומר מציג את המודלים ככלים משלימים: מטרות, התאמה, משוב ופיתוח."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי ומשוב", "question": "למה חלון ג'והרי חשוב במיוחד בניהול צוות ולא רק בפיתוח אישי?", "options": ["כי הוא מודד תפוקות טכניות", "כי מודעות עצמית ותקשורת משפיעות על האמון והאינטראקציות בצוות", "כי הוא מחליף מודלי מוטיבציה", "כי הוא מיועד רק למנהלים בכירים"], "correct": 1, "explanation": "הקורס הדגיש את השימוש בו לשיפור תקשורת, אמון ועבודת צוות."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "חוזקות", "question": "איזו טעות ניהולית מנוגדת במיוחד לגישת ניהול לפי חוזקות?", "options": ["לזהות תחומי הצטיינות", "להתאים לעובד משימות שמייצרות לו אנרגיה", "לבנות תפקיד רק סביב תיקון חולשות ולהתעלם ממה שהוא עושה מצוין", "לתת משוב שמכיר בהצלחות"], "correct": 2, "explanation": "הגישה מתנגדת למיקוד בלעדי בתיקון חולשות."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "פיתוח עובדים", "question": "ארגון מצהיר שפיתוח עובדים חשוב אך בפועל כמעט לא משקיע בו. מה הסיכון המרכזי שהודגש בחומר?", "options": ["רק פגיעה בתדמית החיצונית", "אובדן כושר הישרדות בסביבה דינמית ומשתנה", "הקטנת בירוקרטיה", "עודף מחויבות עובדים"], "correct": 1, "explanation": "בחומר הודגש הפער בין הצהרות להשקעה בפועל והסיכון העתידי לארגון."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "לחץ", "question": "עובד חווה לחץ גבוה במיוחד דווקא כשדרישות התפקיד נשארות קבועות אבל תחושת המשאבים שלו יורדת. איזו הגדרה מסבירה זאת?", "options": ["לחץ הוא סכום מוחלט של משימות", "לחץ הוא פער בין דרישות לבין משאבים נתפסים", "לחץ הוא כל רגש שלילי בעבודה", "לחץ נובע רק מאירועי חירום"], "correct": 1, "explanation": "לפי Lazarus & Folkman, לחץ נובע מהפער בין דרישות למשאבים הנתפסים."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "לחץ", "question": "איזה מקרה מתאר לחץ אקוטי ולא כרוני?", "options": ["שחיקה מצטברת לאורך שנה", "עומס רגשי מתמשך בתפקיד שירות", "פרזנטציה חשובה מחר שדורשת התמודדות נקודתית", "עמימות תפקיד לאורך חודשים"], "correct": 2, "explanation": "לחץ אקוטי הוא קצר טווח וסביב אירוע נקודתי."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "לחץ", "question": "איזה דפוס תוצאה תואם לחץ כרוני?", "options": ["ירידה רגעית ולאחריה התאוששות מלאה", "פגיעה מצטברת בקוגניציה, ברגש ובביצועים ועלייה בסיכון לשחיקה", "עלייה קבועה במעורבות", "שיפור מובנה ביצירתיות"], "correct": 1, "explanation": "החומר מדגיש שלחץ כרוני מוביל לשחיקה ולהשלכות קוגניטיביות, רגשיות וארגוניות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "FFF", "question": "עובדת דוחה שוב ושוב משימה עמומה, למרות שיש לה ידע מקצועי. לפי Fight–Flight–Freeze, ההתנהגות משקפת בעיקר:", "options": ["Fight", "Flight", "Recovery", "Engagement"], "correct": 1, "explanation": "דחיינות והימנעות ממופות בחומר כ-Flight."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "FFF", "question": "מתי הסבירות ל-Freeze גבוהה במיוחד?", "options": ["כאשר יש בהירות תפקיד ואוטונומיה", "כאשר יש איום לא ברור ואי-ודאות גבוהה", "כאשר העובד מקבל משוב ותמיכה", "כאשר המשימה מחולקת לצעדים קטנים"], "correct": 1, "explanation": "החומר מדגיש שקיפאון מופיע בעיקר במצבי אי-ודאות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "FFF", "question": "איזה צעד ניהולי צפוי במיוחד להעביר עובד מתגובת Freeze לתגובת Fight יעילה?", "options": ["הגברת לחץ זמן בלי הסבר", "הפחתת בהירות כדי לעודד עצמאות", "מתן שליטה, נהלים ברורים, תמיכה ופירוק המשימה לצעדים", "הימנעות מכל מעורבות ניהולית"], "correct": 2, "explanation": "כך הארגון מחזק תחושת שליטה ומשאבים, בדיוק לפי המשמעויות הניהוליות של המודל."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "שחיקה", "question": "איזה צירוף מייצג נכון את שלושת רכיבי השחיקה של מסלאך?", "options": ["חרדה, כעס, דחיינות", "תשישות רגשית, ציניות/דפרסונליזציה, ירידה בתחושת המסוגלות", "עייפות פיזית, היעדרות, קונפליקט", "חוסר שייכות, חוסר ביטחון, חוסר שכר"], "correct": 1, "explanation": "זהו ההגדר של Burnout בקורס."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "שחיקה", "question": "עובד אומר: 'אין לי יותר כוח לאנשים, אני ציני כלפי לקוחות ולא מרגיש שאני טוב בעבודה.' מהי הפרשנות המדויקת ביותר?", "options": ["הוא חווה לחץ אקוטי בלבד", "שלושת מרכיבי השחיקה מופיעים יחד", "זהו רק קושי מוטיבציוני חולף", "זהו מקרה של כוח תגמול נמוך"], "correct": 1, "explanation": "האמירה משקפת תשישות, ציניות וירידה בתחושת מסוגלות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "JD-R", "question": "לפי Job Demands–Resources, מה קובע אם עומס יהפוך לאיום או לאתגר?", "options": ["רק גיל העובד", "רק שכרו של העובד", "היחס בין דרישות לבין משאבים", "רק אופי התפקיד"], "correct": 2, "explanation": "זהו לב המודל: לא הדרישות לבדן, אלא היחס בינן לבין המשאבים."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "JD-R", "question": "באיזה מצב סביר יותר לראות מעורבות ולא שחיקה?", "options": ["דרישות נמוכות ומשאבים נמוכים", "דרישות גבוהות ומשאבים גבוהים", "דרישות גבוהות ומשאבים נמוכים", "דרישות נמוכות בלי אוטונומיה"], "correct": 1, "explanation": "החומר מציין שדרישות גבוהות עם משאבים גבוהים יכולות לייצר Eustress ומעורבות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "JD-R", "question": "איזה מהבאים הוא משאב עבודה מבני-תפקודי לפי החומר?", "options": ["עומס משימות", "אוטונומיה ובהירות תפקיד", "דרישות רגשיות", "לחץ זמן"], "correct": 1, "explanation": "אוטונומיה ובהירות תפקיד הופיעו כמשאבים מרכזיים."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "JD-R", "question": "ארגון מגיב לשחיקה רק בהפחתת מספר משימות, אך לא משפר אוטונומיה, משוב או תמיכה. מה הפספוס המרכזי?", "options": ["הוא מתמקד בדרישות ומתעלם מחשיבות המשאבים", "הוא מעלה יותר מדי צדק ארגוני", "הוא מעודד יותר מדי Fight", "הוא מחזק מוטיבציה פנימית יתר על המידה"], "correct": 0, "explanation": "בחומר הודגש שבעידן החדש הבעיה המרכזית היא לעיתים חוסר משאבים, לא רק עצם העומס."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "עבודת רגשות", "question": "נציגת שירות מחייכת כלפי לקוח כועס למרות שבתוכה היא מתוסכלת מאוד, בלי לנסות באמת לשנות את תחושתה. איזה סוג עבודה רגשית זה?", "options": ["Deep acting", "Surface acting", "Recovery acting", "Job crafting"], "correct": 1, "explanation": "Surface acting הוא משחק שטחי: שינוי ביטוי חיצוני בלי שינוי פנימי."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "עבודת רגשות", "question": "מדוע משחק שטחי שוחק במיוחד?", "options": ["כי הוא מעלה אוטונומיה", "כי הוא יוצר דיסוננס בין רגשות מורגשים למוצגים", "כי הוא משפר תמיד מכירות", "כי הוא מבטל את דרישות התפקיד"], "correct": 1, "explanation": "הפער בין רגשות מורגשים למוצגים יוצר דיסוננס רגשי ושחיקה."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "עבודת רגשות", "question": "איזה תפקיד נמצא בסיכון גבוה במיוחד לעבודת רגשות לפי החומר?", "options": ["תפקיד עם משימות חישוב בלבד", "תפקיד שירות/בריאות/חינוך עתיר אינטראקציות רגשיות", "תפקיד ללא לקוחות כלל", "תפקיד זמני קצר"], "correct": 1, "explanation": "החומר מציין שבריאות, שירות וחינוך חשופים במיוחד לעומס רגשי."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "Sutton & Rafaeli", "question": "לפי המחקר שהוצג בקורס, למה נחמדות קמעונאית לא בהכרח העלתה מכירות?", "options": ["כי לקוחות תמיד מעדיפים יחס קר", "כי עומס רגשי עלול לפגוע בתפקוד, ובמצבי עומס לקוחות מעריכים יעילות יותר מנחמדות", "כי תגמול כספי מחליף שירות טוב", "כי חיוך נתפס כלא הוגן"], "correct": 1, "explanation": "כך הוסבר המחקר: עומס רגשי שוחק ויעילות עשויה להיות חשובה יותר במצבי עומס."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "ניהול עומס רגשי", "question": "איזה מהלך ארגוני יהיה המתאים ביותר להפחתת השפעות של עבודת רגשות?", "options": ["דרישה לחיוביות מלאה ללא הפסקות", "הגדלת ניטור בלבד", "הפסקות, תמיכה ניהולית והפחתת עומסים רגשיים", "ביטול כל קשר עם לקוחות"], "correct": 2, "explanation": "אלה הומלצו בחומר כדרכי התמודדות ארגוניות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "Job crafting", "question": "למה Job Crafting הוצג ככלי רלוונטי להפחתת שחיקה?", "options": ["כי הוא מעלה את העומס", "כי הוא מאפשר לעובד לעצב היבטי תפקיד כך שיתאימו טוב יותר למשאביו ולחוזקותיו", "כי הוא מחליף שכר", "כי הוא מבטל את הצורך במנהל"], "correct": 1, "explanation": "בחומר צוין ש-Job Crafting מפחית סיכון לשחיקה."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "לחץ", "question": "איזו תוצאה קוגניטיבית של לחץ הודגשה בשיעור?", "options": ["עלייה קבועה ביצירתיות", "שיפור בזיכרון לטווח ארוך בכל מצב", "פגיעה בקבלת החלטות ובריכוז", "ביטול השפעת האינטואיציה"], "correct": 2, "explanation": "החומר ציין פגיעה בחשיבה, ביצירתיות ובריכוז תחת לחץ."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "ניהול לחץ", "question": "איזו אמירה ניהולית משקפת הכי טוב את השיעור?", "options": ["לחץ הוא תמיד רע ולכן צריך לבטל כל דרישה גבוהה", "המטרה היא לא לבטל דרישות אלא לבנות משאבים שמאפשרים להתמודד איתן", "ככל שהדרישות גבוהות יותר כך השחיקה תמיד נמוכה יותר", "הפתרון היחיד הוא להחליף עובדים"], "correct": 1, "explanation": "זהו סיכום מדויק של מודל JD-R ושל ההבחנה בין עומס מאתגר לעומס שוחק."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "שלבי משבר", "question": "איזה רצף משקף את תהליך ההתמודדות עם מצב חירום מתמשך כפי שהוצג בקורס?", "options": ["התאוששות → הלם → שגרת חירום", "הלם ותגובה ראשונית → שגרת חירום → התאוששות", "חרדה → אשמה → חוסן", "Fight → Meaning → Burnout"], "correct": 1, "explanation": "זהו הרצף המרכזי שהופיע במצגת ובסיכום: הלם/תגובה ראשונית, שגרת חירום, התאוששות."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "שגרת חירום", "question": "מה מאפיין במיוחד את שלב 'שגרת חירום'?", "options": ["חזרה מלאה לשגרה רגילה", "תפקוד חלקי לצד דריכות גבוהה ושימור שגרות", "קיפאון מוחלט של הארגון", "היעדר צורך בתקשורת"], "correct": 1, "explanation": "כך הוגדר השלב בחומר."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "התקף חרדה", "question": "לפי החומר, מהו עיקרון חשוב בטיפול באחר בזמן התקף חרדה?", "options": ["לשאול מיד שאלות עומק על רגשות", "לעודד פעולות פשוטות ויעילות וליצור קשר מרגיע", "להתווכח עם האדם על חוסר ההיגיון שלו", "לתת לו להישאר לבד עד שיירגע"], "correct": 1, "explanation": "במודל מעש״ה מודגשים קשר, פעולה, שאלות פשוטות והבניית רצף האירועים."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "מעשה", "question": "איזו פעולה מתאימה למרכיב 'מקד קשר' במודל מעש״ה?", "options": ["'תירגע מיד'", "'אתה לא לבד, אני איתך'", "'למה אתה מרגיש ככה?'", "'בוא ננתח את שורש החרדה שלך'"], "correct": 1, "explanation": "זו הדוגמה הישירה שניתנה בחומר."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "מעשה", "question": "מה פחות מתאים בזמן סיוע מיידי בהתקף חרדה לפי הקורס?", "options": ["לכוון לנשימה או משימה קטנה", "לשאול שאלות פשוטות", "להעמיק בחקירה רגשית מורכבת", "לסדר את רצף האירועים"], "correct": 2, "explanation": "החומר מדגיש 'לא על רגשות' בשלב הסיוע הראשוני."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "טיפול עצמי", "question": "איזה מהבאים הוצג ככלי לטיפול עצמי בזמן חרדה?", "options": ["ניתוק מכל גירוי חושי", "קרקוע 5–4–3–2–1 ונשימה סרעפתית", "הגברת צריכת מידע חדשותי", "הימנעות מכל פעולה"], "correct": 1, "explanation": "אלו דוגמאות ישירות מהחומר."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "טיפול עצמי", "question": "למה מעבר מ-being ל-doing מסייע במשבר?", "options": ["כי הוא מחליף את כל הצורך בתמיכה", "כי פעולה קטנה מעלה תחושת שליטה ומפחיתה חרדה", "כי הוא מבטל עייפות פיזית", "כי הוא מונע רגשות אשמה"], "correct": 1, "explanation": "זהו עיקרון מרכזי בחומר: פעולה יוצרת שליטה."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "אשמה", "question": "איזה מסר תואם את האופן שבו הוצע לטפל באשמה במשבר?", "options": ["'אם את מרגישה אשמה כנראה את אשמה'", "'יש אשם ברור במצב – וזה לא את'", "'אשמה תמיד מועילה לתפקוד'", "'צריך להימנע מעובדות ולדבר רק על רגשות'"], "correct": 1, "explanation": "החומר הדגיש הורדת תחושת אחריות אישית ופירוק אשמה לא רציונלית."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן", "question": "מה ההבדל המרכזי בין תחושת קורבן לבין חוסן כפי שהודגש במצגת?", "options": ["חוסן הוא היעדר רגשות", "חוסן קשור לתחושת מסוגלות ושליטה מול חוסר אונים", "קורבן הוא תמיד מצב אובייקטיבי", "אין הבדל מהותי"], "correct": 1, "explanation": "התרשים במצגת מציב חוסר אונים מול שליטה ומסוגלות."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "גש״ר מאח״ד", "question": "איזה זוג מתאים נכון למודל גש״ר מאח״ד?", "options": ["גוף – נשימות ותנועה", "חברה – הימנעות מקשרים", "דמיון – ניתוח נתונים בלבד", "שכל – הפסקת תכנון"], "correct": 0, "explanation": "המודל מציג גוף, שכל, רגש, מערכת אמונות, חברה ודמיון כמקורות חוסן."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "גש״ר מאח״ד", "question": "איזו דוגמה מבטאת שימוש במשאב 'מערכת אמונות'?", "options": ["תרגיל נשימה", "תכנון משימות שבועי", "חיבור למשמעות, ערכים או רוחניות", "התבודדות מחברים"], "correct": 2, "explanation": "מערכת אמונות כוללת משמעות, ערכים ורוחניות."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן ארגוני", "question": "איזו תגובת הנהלה צפויה לחזק חוסן ארגוני בזמן משבר?", "options": ["ביטול שיחות כדי לא להציף רגשות", "לגיטימציה לרגשות, שקיפות ועדכונים קבועים", "הסתרת מידע כדי למנוע פאניקה", "התמקדות רק בתפוקה יומית"], "correct": 1, "explanation": "החומר מדגיש לגיטימציה לרגשות, שקיפות, נרטיב חיובי ועוגני בהירות."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן ארגוני", "question": "למה שגרה, גם אם היא 'שגרת חירום', חשובה כל כך?", "options": ["כי היא מבטלת סיכונים חיצוניים", "כי היא מחזירה תחושת קרקע בטוחה, בהירות ושליטה", "כי היא מייתרת מנהיגות", "כי היא מחליפה תמיכה חברתית"], "correct": 1, "explanation": "זו אחת ההדגשות המרכזיות בחומר."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן ארגוני", "question": "איזו פרקטיקה מתאימה במיוחד להפחתת אי-ודאות בארגון במשבר מתמשך?", "options": ["שינוי תפקידים יומיומי ללא עדכון", "עדכונים קבועים, נהלים ברורים וחלוקת תפקידים", "הימנעות מהגדרת נהלים כדי לשמור גמישות", "העברת אחריות מלאה לעובדים"], "correct": 1, "explanation": "אלה 'עוגני הבהירות' שהוזכרו בחומר."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "נרטיב", "question": "מהי תרומת 'נרטיב חיובי ומעצים' במשבר?", "options": ["הכחשת המשבר", "יצירת משמעות וצמיחה לצד ההכרה בקושי", "הקטנת הצורך בתמיכה חברתית", "העברת כל האחריות לפרט"], "correct": 1, "explanation": "החומר מדגיש 'לא רק המשבר — גם הצמיחה ממנו'."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן קהילתי", "question": "איזו פעולה משקפת השקעה בהון חברתי?", "options": ["צמצום קשרים כדי למנוע עומס", "חיזוק איכות וכמות הקשרים בין פרטים ודאגה לאוכלוסיות מוחלשות", "התמקדות רק בתשתיות חומריות", "הימנעות מעבודת צוות"], "correct": 1, "explanation": "הון חברתי הוגדר כמשאבים בלתי חומריים שמתבטאים בקשרים ובשימוש בהם."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן קהילתי", "question": "למה עבודת צוות ו'להיות ביחד' הודגשו בהקשר של טראומה?", "options": ["כי בדידות תמיד משפרת תפקוד", "כי יחד מפחית בדידות וניכור ומחזק תמיכה", "כי היא מחליפה צורך במנהיגות", "כי היא מונעת כל חרדה"], "correct": 1, "explanation": "זהו עקרון ישיר מהחומר על חוסן קהילתי וארגוני."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "מדידה ולמידה", "question": "למה הוצג הצורך במדידה, מחקר ותיעוד לאחר טראומה?", "options": ["רק כדי להצדיק תקציבים", "כדי להבין היקף, ללמוד ולשפר התמודדות עתידית", "כי זה מעלה מיידית את מצב הרוח", "כדי להימנע מהעמקת משמעות"], "correct": 1, "explanation": "החומר קושר מדידה ותיעוד ללמידה ארגונית וקהילתית."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "מנהיגות", "question": "איזה תיאור של מנהיגות מתאים במיוחד לזמן משבר לפי הקורס?", "options": ["מנהיגות שמכחישה רגשות כדי לשמור קשיחות", "מנהיגות מווסתת-רגש שמספקת יציבות, הכרה ושקיפות", "מנהיגות שמוותרת על תקשורת", "מנהיגות שמעדיפה רק סמכות פורמלית"], "correct": 1, "explanation": "כך הוגדרה מנהיגות מחזקת חוסן."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן", "question": "איזו אמירה מסכמת היטב את גישת הקורס לחוסן?", "options": ["חוסן הוא תכונה מולדת בלבד", "חוסן נבנה דרך משאבים אישיים, חברתיים וארגוניים שמחזקים יכולת התמודדות", "חוסן פירושו לא להרגיש פחד", "חוסן רלוונטי רק לקהילה ולא לארגון"], "correct": 1, "explanation": "המודל והחומר מציגים חוסן כמשאב נבנה ולא רק כתכונה קבועה."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "רב-רמתיות", "question": "לפי הסקירה הרב-רמתית של Bankins ואח', איזה צירוף משקף נכון את שלוש הרמות המרכזיות?", "options": ["פרט, אינטראקציה, ארגון/שוק", "אדם, קבוצה, קהילה", "אסטרטגיה, תפעול, תקציב", "אמון, הוגנות, שליטה"], "correct": 0, "explanation": "הסקירה מציגה רמת פרט, רמת אינטראקציה אדם-AI, ורמת הארגון והשוק."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "עמדות עובדים", "question": "איזה מצב יגביר במיוחד התנגדות עובדים ל-AI?", "options": ["תפיסה שהכלי מעצים אותם ושקוף להם", "חשש מהחלפה, חוסר ביטחון ואובדן שליטה", "הטמעה הדרגתית עם הכשרה", "יכולת לערער על החלטת המערכת"], "correct": 1, "explanation": "החומר מדגיש שפחד מהחלפה וחוסר ביטחון מעלים התנגדות טכנולוגית."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "אינטראקציה אדם-AI", "question": "מתי אמון העובדים ב-AI צפוי להיות גבוה יותר?", "options": ["כאשר המערכת פועלת כקופסה שחורה", "כאשר המשימה פשוטה וההמלצות שקופות וברורות", "כאשר מדובר בהחלטה קריטית ולא מוסברת", "כאשר אין לעובד כל שליטה"], "correct": 1, "explanation": "החומר מציין אמון גבוה יותר במשימות פשוטות ושקיפות כמגבירת אמון."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "אוטונומיה", "question": "מהו סיכון מרכזי של תהליכי עבודה המבוססים על AI לפי הקורס?", "options": ["הגדלת חופש פעולה בכל תפקיד", "פגיעה באוטונומיה המקצועית", "ביטול הצורך בכישורים אנושיים מורכבים בלבד", "שקיפות מלאה תמיד"], "correct": 1, "explanation": "החומר מדגיש ירידה באוטונומיה ותחושת איבוד שליטה."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "מיומנויות", "question": "איזה שינוי בכישורים הוצג כמאפיין של עידן ה-AI?", "options": ["פחות צורך ביצירתיות ושיפוט מוסרי", "עלייה בחשיבות אמפתיה, יצירתיות וחשיבה ביקורתית לצד מיומנויות טכנולוגיות", "ביטול ערך למיומנויות אנושיות", "חזרה להתמחות צרה בלבד"], "correct": 1, "explanation": "זהו ניסוח ישיר מתוכן הקורס."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "שוק העבודה", "question": "איזה סוג תפקידים הוצג כבעל סיכון גבוה יותר לאוטומציה?", "options": ["תפקידים רוטיניים כמו הזנת נתונים ושירות לקוחות", "תפקידים עתירי אמפתיה בלבד", "כל תפקידי הניהול הבכיר", "רק מקצועות ידניים"], "correct": 0, "explanation": "החומר מזכיר במפורש תפקידים רוטיניים ושירותיים."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "מיקרוסופט", "question": "איזו טענה על שימוש קבוע ב-AI הוצגה דרך המחקר של מיקרוסופט?", "options": ["הוא תמיד משפר חשיבה ביקורתית", "הוא עלול להפחית צורך בחשיבה ביקורתית ולהוביל לתוצר צפוי יותר", "הוא מבטל הכשרה מקצועית", "הוא מחזק מוכנות לקיצון"], "correct": 1, "explanation": "כך סוכם המחקר בחומר."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "6R", "question": "מערכת שמנטרת כל פעולה של עובד ושומרת לוגים מפורטים מממשת בעיקר איזה R?", "options": ["Replacing", "Recording", "Rewarding", "Restricting"], "correct": 1, "explanation": "Recording הוא תיעוד ומעקב מתמיד."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "6R", "question": "מערכת שמציעה לעובד אילו משימות לבצע עכשיו ואיך לתעדף אותן מממשת בעיקר:", "options": ["Recommending", "Rating", "Rewarding", "Replacing"], "correct": 0, "explanation": "Recommending הוא המלצות מבוססות נתונים לעובדים."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "6R", "question": "איזה R מתייחס להערכת עובדים לפי מדדים וביצועים?", "options": ["Recording", "Rating", "Restricting", "Directing"], "correct": 1, "explanation": "Rating עוסק בדירוג והערכת עובדים."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "6R", "question": "איזו דוגמה תתאים במיוחד ל-Restricting?", "options": ["הצעה על קורסים מומלצים", "מנגנון שמגביל סטיות מהתהליך וקובע חלונות זמן נוקשים", "בונוס אוטומטי לעמידה ביעד", "החלפת עובד בבוט"], "correct": 1, "explanation": "Restricting עוסק בהגבלת חופש פעולה וקביעת מסגרות נוקשות."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "Algoactivism", "question": "עובדים משתפים זה את זה בטיפים איך להתמודד עם מערכת דירוג אלגוריתמית לא הוגנת. איזו צורת התנגדות זו?", "options": ["הטעיית האלגוריתם", "תיאום קולקטיבי", "שקיפות ניהולית", "משחק עמוק"], "correct": 1, "explanation": "זהו אחד משלושת סוגי האלגואקטיביזם בחומר."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "Algoactivism", "question": "איזו דרישה תשקף את מרכיב 'שקיפות' באלגואקטיביזם?", "options": ["העלאת בונוסים", "קבלת מידע על הקריטריונים שלפיהם המערכת מחליטה ואפשרויות ערעור", "הפחתת דרישות תפקיד", "החלפת כל אלגוריתם במנהל אנושי"], "correct": 1, "explanation": "זהו ניסוח כמעט ישיר של החומר."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "AI והוגנות", "question": "מערכת AI מחלקת בונוסים בלי שהעובדים מבינים על בסיס מה. איזה ממד צדק נפגע קודם כול?", "options": ["צדק פיזיולוגי", "צדק פרוצדורלי", "צדק של ג'והרי", "צדק תפעולי בלבד"], "correct": 1, "explanation": "חוסר שקיפות בתהליך ההחלטה פוגע בצדק פרוצדורלי."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "AI והוגנות", "question": "איזו שאלה שייכת במיוחד לצדק חלוקתי בהקשר AI?", "options": ["האם העובדים קיבלו הסבר מכבד?", "האם הקריטריונים עקביים ונטולי הטיה?", "האם המשאבים וההזדמנויות מתחלקים באופן שוויוני?", "האם יש הזדמנות לערעור?"], "correct": 2, "explanation": "צדק חלוקתי עוסק בחלוקת משאבים, תגמולים והזדמנויות."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "AI ומאסלו", "question": "לפי החיבור למאסלו שהוצג בקורס, למה עובדים עלולים להתנגד ל-AI?", "options": ["כי AI פוגע רק בצרכים חברתיים", "כי AI מאיים על צורך בביטחון תעסוקתי ולכן מעורר חרדה", "כי מאסלו שלל טכנולוגיה", "כי AI מחזק רק מימוש עצמי"], "correct": 1, "explanation": "הקורס חיבר את AI במיוחד לצורך בביטחון."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "AI והרצברג", "question": "כאשר AI נתפס כאיום על המשרה, לפי הרצברג מדובר בעיקר ב:", "options": ["גורם מוטיבציה חיובי", "גורם היגיינה שלילי", "הזדמנות לטרנסצנדנציה", "כוח זיקה"], "correct": 1, "explanation": "איום על ביטחון תעסוקתי פוגע בגורם היגייני בסיסי."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "הטמעה ניהולית", "question": "מהו צעד ניהולי נכון בהטמעת AI לפי הקורס?", "options": ["מעבר חד כדי לשבור התנגדות", "שקיפות, הטמעה הדרגתית, הכשרה ושימור אוטונומיה מסוימת לעובד", "העברת כל ההכרעות למערכת", "שימוש ב-AI רק לבקרה ומשמעת"], "correct": 1, "explanation": "אלה ההמלצות המפורשות בחומר."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "שליטה אלגוריתמית", "question": "למה AI כמנגנון שליטה עלול להגביר שחיקה?", "options": ["כי הוא תמיד מעלה שכר", "כי פיקוח מוגבר וירידה באוטונומיה מגבירים לחץ ותחושת איבוד שליטה", "כי הוא מפחית כל דרישה", "כי הוא מבטל הערכת ביצועים"], "correct": 1, "explanation": "זהו אחד המסרים המרכזיים של השיעור."}, {"chapter": "פרק 6: ממשק אדם–בינה מלאכותית", "topic": "ניהול", "question": "איזו עמדה ניהולית משקפת את רוח הקורס ביחס ל-AI?", "options": ["AI צריך להחליף את האדם בכל מקום שאפשר", "AI הוא כלי תומך שצריך להעצים עובדים, לא לשלול אוטונומיה וצדק", "AI רלוונטי רק לשוק העבודה ולא לניהול", "AI צריך להיות בלתי שקוף כדי למנוע מניפולציה"], "correct": 1, "explanation": "זהו סיכום ברור של ההמלצות בחומר."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "Permacrisis", "question": "מה מייחד את מושג ה-permacrisis כפי שהוצג בחומר?", "options": ["זהו משבר חד-פעמי קצר וברור", "זוהי מציאות מתמשכת של משברים מצטלבים וגליים שבה שגרה יציבה כמעט לא קיימת", "זהו משבר כלכלי בלבד", "זהו כינוי לעבודה היברידית"], "correct": 1, "explanation": "כך הוגדר permacrisis במצגת על השפעת משברים."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "רב-שכבתיות", "question": "לפי המודל הרב-שכבתי של שינויי זהות בעקבות משברים, מה נמצא ברמת המיקרו?", "options": ["שינויים סוציופוליטיים קולקטיביים", "דינמיקות בין-קבוצתיות ומשברים חברתיים", "אירועים אישיים משבשים", "מדיניות RTO"], "correct": 2, "explanation": "במודל: micro = personal disruptive events."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "זהות", "question": "איזו אמירה מתארת בצורה הטובה ביותר את מושג הזהות כפי שהוצג?", "options": ["אוסף מקרי של רגשות חולפים", "תחושת רציפות ועקביות הכוללת ערכים, אמונות וחוויות שמעצבים את תפיסת העצמי", "רק התפקיד הרשמי בארגון", "רק סט תכונות מולדות"], "correct": 1, "explanation": "זהו תיאור ישיר מהחומר."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "Boundary Theory", "question": "עובד מתקשה להפריד בין תפקידו המקצועי לבין חייו האישיים, במיוחד בתקופת משבר. לאיזו תיאוריה זה מתחבר?", "options": ["JD-R", "Boundary Theory", "Herzberg", "6R"], "correct": 1, "explanation": "Boundary Theory עוסקת במעברי תפקיד ובגבולות בין תחומים."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "Paradox Mindset", "question": "מהו היתרון של Paradox Mindset לפי הקורס?", "options": ["בחירה תמידית בצד אחד של הקונפליקט", "יכולת להחזיק מתחים ודעות סותרות בלי לחוש מאוים ולהפוך אותם לפתרונות יצירתיים", "ביטול כל מתח רגשי", "ציות מלא לנהלים"], "correct": 1, "explanation": "זהו ניסוח כמעט ישיר מהמצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "קובלר-רוס", "question": "איזו אמירה על מודל קובלר-רוס היא הנכונה ביותר?", "options": ["השלבים תמיד ליניאריים ואוניברסליים", "כל אדם עובר בדיוק את כל השלבים פעם אחת", "השלבים אינם בהכרח ליניאריים, ואפשר לדלג, לחזור אחורה או להיתקע", "המודל מתאר רק אובדן אישי ולא שינוי ארגוני"], "correct": 2, "explanation": "כך הוסבר המודל בקורס."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "קובלר-רוס", "question": "עובד אומר 'זה לא באמת ישפיע, אין צורך לשנות כלום'. באיזה שלב הוא כנראה נמצא?", "options": ["קבלה", "מיקוח", "הלם/הכחשה", "כעס"], "correct": 2, "explanation": "הכחשה והלם מאופיינים באי-קבלת המציאות החדשה ובהקטנת חשיבות השינוי."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "קובלר-רוס", "question": "איזה שלב מאופיין בניסיון למצוא פשרות כדי להקל על הכאב וההשפעה השלילית של השינוי?", "options": ["מיקוח", "דיכאון", "קבלה", "כעס"], "correct": 0, "explanation": "זהו בדיוק תיאור שלב המיקוח."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "קובלר-רוס", "question": "מנהל מפרש ירידה זמנית במחוברות ובפרודוקטיביות ככישלון אישי של העובדים. מה הוא מפספס?", "options": ["ששחיקה תמיד נגרמת רק משכר", "שבתהליכי הסתגלות לשינוי יש תנודתיות טבעית ברגש ובתפקוד", "שקונטקסט לא משנה", "שצריך להחליף מיד את כל העובדים"], "correct": 1, "explanation": "התרשים בקורס קישר שינוי לשלבי הסתגלות עם תנודות ביכולת התמודדות, מחוברות ופרודוקטיביות."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "היברידי", "question": "איזו מסקנה מרכזית על עבודה היברידית עלתה במחקרים שהוצגו?", "options": ["היא פוגעת תמיד בביצועים", "היא יכולה לשפר שימור עובדים בלי לפגוע בביצועים", "היא תמיד מחליפה את הצורך במשרד", "היא רלוונטית רק לעובדי שירות"], "correct": 1, "explanation": "זהו המסר המרכזי מהמחקרים של Bloom ועמיתיו שהוצגו במצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "היברידי", "question": "איזו תופעה מתארת תרבות נוכחות (Presenteeism)?", "options": ["עבודה לפי תוצאות בלבד", "הנחה שעצם ההימצאות במשרד מעידה על מחויבות, גם בלי קשר ישיר לערך שנוצר", "בחירת מקום עבודה לפי נוחות", "פגישות צוות היברידיות"], "correct": 1, "explanation": "כך הוגדרה התופעה במצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "5C", "question": "איזה רכיב במודל 5C של נירית כהן עוסק בבהירות הציפיות לגבי זמינות, נוכחות ודרכי תקשורת?", "options": ["Choice", "Connection", "Clarity", "Culture"], "correct": 2, "explanation": "Clarity עוסק בבהירות."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "5C", "question": "איזה רכיב במודל 5C מתייחס למתן אוטונומיה לעובד בבחירת מקום וזמן עבודה?", "options": ["Choice", "Capability", "Connection", "Culture"], "correct": 0, "explanation": "Choice הוא חופש בחירה."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "5C", "question": "חברה משקיעה בהכשרת מנהלים לנהל צוותים מבוזרים. איזה C זה מחזק במיוחד?", "options": ["Culture", "Capability", "Connection", "Clarity"], "correct": 1, "explanation": "Capability מתייחס לפיתוח מיומנויות ניהול היברידיות."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "ניהול היברידי", "question": "איזה עיקרון משקף את הגישה של 'גמישות עם גבולות'?", "options": ["למדוד שעות נוכחות ולא תוצאות", "לבטל כל יום ליבה משותף", "להגדיר מטרות ותפוקות ברורות, לשלב ימי ליבה ולתאם פרוטוקולי תקשורת", "לאפשר לכל עובד לפעול בלי כל תיאום"], "correct": 2, "explanation": "כך הוצגה הגישה במצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "RTO", "question": "מהו סיכון אחד שהוצג למגמת Return to Office כשהיא מיושמת בלי תכנון טוב?", "options": ["עודף בהירות תפקיד", "מחסור בעמדות, רעש ופגיעה בגיוס מגוון גאוגרפית", "ביטול כל אפשרות לשיתוף פעולה", "ירידה תמידית בתפוקה האישית"], "correct": 1, "explanation": "אלה דוגמאות מפורשות מהמצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "ROWE", "question": "מה מייחד את מודל ROWE?", "options": ["מיקוד בשעות נוכחות במשרד", "עבודה מבוססת תוצאות בלבד ללא דגש על מקום או שעות", "עבודה רק מהבית", "קיצור שבוע העבודה בלבד"], "correct": 1, "explanation": "ROWE = Results-Only Work Environment."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "4-day week", "question": "מהו רעיון ה-100-80-100 שהוצג ביחס לשבוע עבודה מקוצר?", "options": ["100% זמן, 80% שכר, 100% תפוקה", "100% שכר, 80% זמן עבודה, 100% תפוקה", "100% שכר, 100% זמן, 80% תפוקה", "80% שכר, 80% זמן, 100% תפוקה"], "correct": 1, "explanation": "זהו ניסוח המודל כפי שהופיע במצגת."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "היברידי", "question": "למה מעבר למדידת תוצאות ולא כיסאות במשרד הוצג כחשוב?", "options": ["כי נוכחות פיזית תמיד מטעה", "כי הוא מצמצם presenteeism ומיישר קו עם ניהול מבוסס ביצועים", "כי הוא מבטל צורך בתקשורת", "כי הוא מתאים רק ל-Tech"], "correct": 1, "explanation": "זהו אחד הלקחים המרכזיים מהשיעור."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "משבר ועבודה", "question": "איזו מדיניות משלבת היטב בין הבנת משבר מתמשך לבין עבודה היברידית?", "options": ["דרישה אחידה ונוקשה לנוכחות מלאה בלי קשר להקשר", "שילוב בהירות, בחירה, קשר, פיתוח יכולות ותרבות לצד הכרה בכך שתקופות משבר מערערות גבולות וזהות", "ביטול כל גמישות כדי לחזק שליטה", "הסתמכות על אינטואיציה בלבד בניהול"], "correct": 1, "explanation": "החומר על permacrisis, זהות ועבודה היברידית מוביל בדיוק לשילוב הזה: גמישות, בהירות, קשר ויכולת הסתגלות."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "OKRs", "question": "חברה מטמיעה OKRs, אך עובדים ותיקים חשים שהיעדים שלהם מורכבים יותר משל עובדים חדשים שמקבלים בונוסים גבוהים יותר. לפי אדמס, מה צפוי לפגוע במוטיבציה?", "options": ["עצם קיומם של יעדים מדידים", "השוואת תשומות־תפוקות הנתפסת כלא הוגנת מול אחרים", "העובדה שהיעדים נכתבו ברמה רבעונית", "שימוש במטרות איכותניות לצד כמותיות"], "correct": 1, "explanation": "לפי תיאוריית ההוגנות, תחושת חוסר צדק נוצרת כשהעובד תופס את יחס התשומות־תפוקות שלו כפחות טוב משל אחרים."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי ומשוב", "question": "מנהל משתמש בחלון ג׳והרי כדי לצמצם תחושת חוסר הוגנות בצוות. מהו הצעד המתאים ביותר?", "options": ["להסתיר את שיקולי התגמול כדי להפחית קונפליקט", "להרחיב את האזור הגלוי דרך שקיפות ומשוב דו־כיווני", "להתמקד רק במה שהעובדים מסתירים", "להימנע משיחה ישירה כדי לא לפגוע ביחסים"], "correct": 1, "explanation": "בקובץ השאלות הפתוחות הודגש ששקיפות והזמנת משוב מצמצמות אזורים חבויים ועיוורים ומאפשרות טיפול בתחושת אי־הוגנות."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "עבודת רגשות", "question": "עובד במוקד סיוע מנסה להרגיש באמת את האמפתיה שהוא משדר לפונים כדי לא להרגיש מזויף. איזה סוג עבודת רגשות הוא מבצע בעיקר?", "options": ["משחק שטחי", "משחק עמוק", "קיפאון רגשי", "ניתוק רגשי"], "correct": 1, "explanation": "ניסיון לשנות את החוויה הפנימית כך שתתאים לביטוי החיצוני הוא משחק עמוק."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "JD-R", "question": "עובדת במיון חווה עומס רגשי כבד, אך כמעט אין לה זמן התאוששות או תמיכה. לפי JD-R, מהו ההסבר המדויק ביותר לסיכון לשחיקה?", "options": ["שחיקה נוצרת רק כשיש שכר נמוך", "הבעיה העיקרית היא הדרישות הגבוהות בשילוב מחסור במשאבים", "אם העבודה משמעותית לא תיתכן שחיקה", "משאבים משפיעים רק על שביעות רצון ולא על שחיקה"], "correct": 1, "explanation": "מודל JD-R מדגיש שדרישות גבוהות בשילוב משאבים נמוכים מובילים לשחיקה."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "ROWE", "question": "מנכ״ל עובר למודל ROWE והעובדים חוששים לפגיעה בקשר החברתי. איזה ניסוח מחבר נכון בין לוין למאסלו?", "options": ["בשלב ההפשרה צריך להסביר את הצורך בשינוי, ובמקביל להכיר בכך שצורכי שייכות עלולים להיפגע", "יש לקפוץ ישר להקפאה מחדש כדי להפחית התנגדות", "ROWE מחזק רק צרכים פיזיולוגיים ולכן אין צורך בהתערבות", "אם הארגון מודד תוצאות, אין משמעות לשייכות"], "correct": 0, "explanation": "בקובץ הפתוחות חוברו שלבי לוין עם מאסלו: בשלב ההפשרה מסבירים את השינוי ומתייחסים לפגיעה אפשרית בצורך החברתי."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "כוח", "question": "ראשת צוות ללא סמכות פורמלית לפטר או לתגמל מצליחה להשפיע משום שהיא המומחית המרכזית בתחום. איזה מקור כוח הוא המרכזי ביותר במקרה זה?", "options": ["כוח תגמול", "כוח מומחיות", "כוח פורמלי", "כוח מידע בלבד"], "correct": 1, "explanation": "זהו מקרה קלאסי של כוח מומחיות, כפי שגם הודגש בקובץ השאלות הפתוחות."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טקטיקות השפעה", "question": "מבחינת יצירת מחויבות ארוכת טווח, איזו טקטיקה תהיה בדרך כלל אפקטיבית יותר משכנוע רציונלי בלבד?", "options": ["התייעצות ושיתוף בתהליך", "הפעלת לחץ", "איום בענישה", "פנייה פורמלית בלבד"], "correct": 0, "explanation": "בקובץ השאלות הפתוחות הודגש שהתייעצות מייצרת בעלות ולכן תומכת יותר במחויבות מאשר ציות בלבד."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "שגרת חירום", "question": "מנהלת מבחינה שעובדים במצב Freeze בזמן משבר מתמשך. מהו המעבר הניהולי הרצוי ביותר?", "options": ["מהלם לשגרה מלאה מיידית", "מהלם לשגרת חירום עם משימות חלקיות, בהירות ותמיכה", "מקיפאון להגברת עמימות כדי לעודד יוזמה", "מחרדה להכחשה כדי לשמר תפקוד"], "correct": 1, "explanation": "המעבר המומלץ הוא מהלם אל שגרת חירום: ניהול חלקי של משימות לצד דריכות, עוגנים ובהירות."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "נרטיב", "question": "מהו תפקידו של נרטיב מיטיב בזמן משבר ארגוני?", "options": ["להקטין שקיפות כדי למנוע חרדה", "לספר את סיפור המשבר ממקום של עוצמה ויכולת צמיחה", "להעביר את האחריות כולה לעובדים", "לבטל רגשות שליליים באמצעות הכחשה"], "correct": 1, "explanation": "נרטיב מיטיב מחזק חוסן בכך שהוא ממסגר את המשבר גם כמקום של התמודדות, משמעות וצמיחה."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "היברידי", "question": "כאשר רק מחלקה אחת מקבלת אפשרות לעבוד מהבית והאחרות לא, מה צפוי להסביר את תחושת התסיסה לפי אדמס?", "options": ["פערים בתפיסת תשומות־תפוקות בין קבוצות", "ירידה אוטומטית במימוש עצמי", "הכרח לפתח משחק עמוק", "תגובה טבעית לשגרת חירום"], "correct": 0, "explanation": "הגמישות נתפסת כתפוקה בעלת ערך; אם היא מחולקת באופן לא שוויוני, נוצרת תחושת אי־הוגנות."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "חוזקות", "question": "מנהל בוחר בשיחת משוב להתמקד בחוזקות העובד ולא רק בחולשותיו. איך זה מתקשר למאסלו?", "options": ["זה עוזר רק לצורכי ביטחון", "זה מחזק מימוש עצמי כי העובד פועל מתוך פוטנציאל וערך", "זה מבטל את חשיבות ההערכה", "זה רלוונטי רק לעובדים מוחצנים"], "correct": 1, "explanation": "הקשר שהופיע גם בקבצים החדשים הוא שניהול לפי חוזקות תומך במימוש עצמי ובהכרה בערך הייחודי של העובד."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "Forming-Storming-Norming", "question": "צוות שנמצא ב-Storming נכנס למשבר לאומי. למה מענה לצרכים פיזיולוגיים ובטיחותיים עשוי לסייע לו להתקדם ל-Norming?", "options": ["כי הוא מבטל הבדלי אישיות", "כי לפני גיבוש נורמות צריך להחזיר תחושת ביטחון בסיסית", "כי הוא מחליף את הצורך במנהיגות", "כי הוא הופך כל קונפליקט לחיובי"], "correct": 1, "explanation": "בקובץ השאלות הפתוחות הודגש שלפני חזרה לביצועים ולגיבוש צוותי, יש להחזיר תחושת הגנה וביטחון."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הרצברג", "question": "ארגון מציע בונוסים גבוהים, אך העובדים עדיין מדווחים על שביעות רצון נמוכה ושחיקה. מהו ההסבר הטוב ביותר לפי הרצברג?", "options": ["בונוסים הם גורמי מוטיבציה פנימיים ולכן זה בלתי אפשרי", "בונוסים הם גורמי היגיינה, ולכן לבדם אינם מייצרים מוטיבציה עמוקה", "בונוסים פועלים רק על דור Z", "בונוסים מפחיתים תמיד צדק חלוקתי"], "correct": 1, "explanation": "לפי הרצברג, שכר ובונוסים מונעים אי־שביעות רצון, אך אינם מספיקים כדי לייצר עניין, משמעות וצמיחה."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "ROWE", "question": "מהו קושי מרכזי בשלב Norming בצוות העובד לפי ROWE או בצורה מבוזרת מאוד?", "options": ["עודף נהלים פורמליים", "קושי לקבוע נורמות עבודה משותפות כשכל אחד עובד בזמן ובמקום אחרים", "חוסר יכולת להציב מטרות", "היעדר כל צורך בתיאום"], "correct": 1, "explanation": "בקובץ הפתוחות הודגש שעבודה מבוזרת עלולה להקשות על גיבוש נורמות משותפות ולכידות."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "מטרות", "question": "מדוע הצבת OKRs שאפתניים מאוד עלולה להיכשל אצל עובדים שנמצאים במצב Freeze?", "options": ["כי מטרות מאתגרות תמיד פוגעות במוטיבציה", "כי במצב קיפאון המסוגלות הנתפסת נמוכה והמטרה נחווית כאיום ולא כאתגר", "כי OKRs לא מתאימים לארגונים במשבר", "כי עובדים בקיפאון לא מושפעים ממטרות בכלל"], "correct": 1, "explanation": "בקובץ השאלות הפתוחות חוברו לוק ולאת׳ם עם משבר: מטרות צריכות להיתפס כברות השגה, אחרת הן מעלות איום ולא מוטיבציה."}, {"chapter": "פרק 5: התמודדות עם משבר וחוסן", "topic": "חוסן ארגוני", "question": "איזו פעולה משקפת שימוש בהון חברתי כדי לקדם חוסן ארגוני בזמן משבר?", "options": ["צמצום מגע בין עובדים כדי למנוע תלות", "חיזוק קשרים, תמיכה הדדית ועבודה משותפת", "הסתרת מידע כדי למנוע שמועות", "הסתמכות בלעדית על נהלים כתובים"], "correct": 1, "explanation": "הון חברתי הוגדר בחומר כרשת הקשרים והמשאבים הבלתי חומריים, והוא מתחזק דרך קשר, צוות ותמיכה הדדית."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "ניהול מגוון", "question": "מנהלת מדור הבייבי־בומרס מנסה להניע צוות דור Z בעיקר דרך קביעות ובונוסים על שעות נוספות, אך נתקלת בהתנגדות. איזה פער מודגש כאן?", "options": ["פער בין גורמי היגיינה לבין חיפוש אחר אוטונומיה, גמישות ומשמעות", "פער בין משחק שטחי למשחק עמוק", "פער בין כוח אישי לכוח מידע", "פער בין שגרת חירום להתאוששות"], "correct": 0, "explanation": "בקובץ הפתורות הודגש שדור Z עשוי לחפש יותר אוטונומיה, התפתחות ומשמעות מעבר לגורמי היגיינה בסיסיים."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "טקטיקות השפעה", "question": "מנהלת מפעילה סמכות פורמלית ודורשת מהצוות להישאר עד מאוחר. איזו טקטיקת השפעה היא מפעילה בעיקר?", "options": ["התייעצות", "לחץ/לגיטימציה", "בניית קואליציות", "פנייה לרגש"], "correct": 1, "explanation": "כאשר הסמכות הפורמלית משמשת להכתבת התנהגות, מדובר בלחץ או בלגיטימציה המבוססת על התפקיד."}, {"chapter": "פרק 4: לחץ, שחיקה ועבודת רגשות", "topic": "עבודת רגשות", "question": "אחות מחייכת ומרגיעה מטופלים אף שבתוכה היא חרדה, ואז מנסה לשכנע את עצמה שהיא 'המגן של המטופלים' כדי להרגיש באמת רגועה. איזה רצף מתואר כאן?", "options": ["רק משחק שטחי", "רק משחק עמוק", "מעבר ממשחק שטחי למשחק עמוק", "מעבר מ-Fight ל-Flight"], "correct": 2, "explanation": "החיוך החיצוני הוא משחק שטחי, והניסיון לשנות את ההרגשה הפנימית הוא משחק עמוק."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הוגנות", "question": "עובד מגלה שקולגה שמבצע עבודה פחות מורכבת קיבל העלאה גבוהה יותר, ולכן מצמצם מאמץ. איך אדמס יסביר זאת?", "options": ["העובד עבר למיקוד קידום", "העובד מנסה לאזן מחדש יחס תשומות־תפוקות שנתפס כלא הוגן", "העובד סובל בהכרח משחיקה כרונית", "העובד מפגין מצפוניות גבוהה"], "correct": 1, "explanation": "לפי אדמס, אחת הדרכים להשיב איזון נתפס היא הפחתת תשומות כמו מאמץ או השקעה."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "ג'והרי", "question": "מנהל מציג לעובד שהוא מצטייר כביקורתי הרבה יותר מכפי שהוא חושב. איזה מעבר בחלון ג׳והרי נוצר?", "options": ["מהגלוי לנסתר", "מהעיוור לגלוי", "מהלא־ידוע לנסתר", "מהחבוי לעיוור"], "correct": 1, "explanation": "מידע שהיה ידוע לאחרים אך לא לעובד עובר מן האזור העיוור אל האזור הגלוי."}, {"chapter": "פרק 7: משברים, שינויי זהות ועבודה היברידית", "topic": "היברידי", "question": "צוות פיתוח גלובלי במודל היברידי מתווכח בלי סוף על אחריות ולוחות זמנים. באיזה שלב של טקמן הוא כנראה נמצא?", "options": ["Forming", "Storming", "Norming", "Performing"], "correct": 1, "explanation": "ויכוחים על תחומי אחריות וקונפליקטים סביב תפקידים מאפיינים את שלב ה-Storming."}, {"chapter": "פרק 2: מוטיבציה, הוגנות והצבת מטרות", "topic": "הרצברג", "question": "חברה של פרילנסרים נותנת לעובדים יותר אוטונומיה לעצב את הפרויקטים שלהם. לפי הרצברג, זה צפוי להשפיע בעיקר דרך:", "options": ["גורם היגיינה של תנאי שכר", "גורם מוטיבציה פנימי הקשור לתוכן העבודה", "צדק אינטראקציוני בלבד", "הפחתת עבודת רגשות"], "correct": 1, "explanation": "אוטונומיה נחשבת גורם מוטיבציה פנימי, ולכן עשויה להעלות מעורבות ושביעות רצון."}, {"chapter": "פרק 3: ניהול ביצועים, משוב ופיתוח עובדים", "topic": "TOP", "question": "עובד חדש מצטיין בניתוח נתונים, אך חסר לו ביטחון והיכרות עם כלי החברה. איזו פעולה משקפת שימוש נכון במודל TOP?", "options": ["להתמקד רק בחסרונות כדי לסגור פערים מהר", "לחבר בין הכישרון שלו, צורכי הארגון והגברת התשוקה דרך הצלחות קטנות והדרכה", "להעביר אותו מיד לתפקיד אחר", "לבטל עבורו משוב עד שיצבור ניסיון"], "correct": 1, "explanation": "כך תואר הפתרון גם בקובץ הפתורות: חיבור בין Talent, Organization ו-Passion בתוכנית פיתוח."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "גישות ניהול", "question": "מהי ההשוואה הנכונה ביותר בין טיילור לבין ROWE?", "options": ["שניהם מודדים נוכחות בלבד", "טיילור מדגיש פיקוח, סטנדרטיזציה וזמן; ROWE מדגיש אוטונומיה ומדידת תוצאות בלבד", "ROWE הוא הרחבה ישירה של הבירוקרטיה של ובר", "טיילור ו-ROWE זהים ביחסם לעובד"], "correct": 1, "explanation": "זו אחת ההשוואות המפורשות בקובץ השאלות הפתוחות והפתורות."}, {"chapter": "פרק 1: יסודות הניהול והבדלים אינדיווידואליים", "topic": "הות'ורן", "question": "איזו תרומה מרכזית של ניסויי הות׳ורן חשובה במיוחד למעבר מארגון 'טיילוריסטי' לארגון לומד וגמיש?", "options": ["הוכחה שכסף הוא המניע היחיד", "ההבנה שתשומת לב, דינמיקה קבוצתית ויחס אנושי משפיעים על תפוקה מעבר לתנאים פיזיים", "מסקנה שצריך לבטל כל נהלים פורמליים", "הוכחה ששעות עבודה ארוכות תמיד יעילות"], "correct": 1, "explanation": "ניסויי הות׳ורן שינו את מוקד החשיבה הניהולית מגורמים טכניים בלבד לגורמים חברתיים ופסיכולוגיים."}];
+const CHAPTERS = Array.from(new Set(QUESTIONS.map(function(q){ return q.chapter; })));
+const TOPICS = Array.from(new Set(QUESTIONS.map(function(q){ return q.topic; }))).sort(function(a,b){ return a.localeCompare(b, "he"); });
+const STORAGE_KEY = 'behavioral_science_manager_quiz_v4_ios';
+
+
+const IS_IPHONE = /iPhone|iPod/i.test(navigator.userAgent);
+const IS_IPAD = /iPad/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = IS_IPHONE || IS_IPAD;
+const IS_STANDALONE = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+if (IS_STANDALONE) document.documentElement.classList.add('standalone');
+const appbar = document.getElementById('appbar');
+const installSheet = document.getElementById('installSheet');
+function openInstallSheet(){ installSheet.classList.add('show'); installSheet.setAttribute('aria-hidden','false'); }
+function closeInstallSheet(){ installSheet.classList.remove('show'); installSheet.setAttribute('aria-hidden','true'); }
+if (IS_IOS && !IS_STANDALONE && localStorage.getItem('behavioral_science_appbar_dismissed') !== '1') {
+  appbar.classList.add('show');
+}
+document.getElementById('showInstallBtn')?.addEventListener('click', openInstallSheet);
+document.getElementById('closeInstallBtn')?.addEventListener('click', closeInstallSheet);
+installSheet?.addEventListener('click', function(e){ if (e.target === installSheet) closeInstallSheet(); });
+document.getElementById('dismissAppbarBtn')?.addEventListener('click', function(){
+  localStorage.setItem('behavioral_science_appbar_dismissed','1');
+  appbar.classList.remove('show');
+});
+
+const state = {
+  order: QUESTIONS.map(function(_,i){ return i; }),
+  current: 0,
+  answers: {},
+  evaluated: {},
+  correctMap: {},
+  mistakesOnly: false,
+  examMode: false,
+  unansweredOnly: false,
+  filters: {chapter:'__all__', topic:'__all__', search:''},
+  filteredOrder: []
+};
+
+function storageAvailable(){
+  try {
+    const testKey = STORAGE_KEY + '_test';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+function saveState(){
+  try {
+    if (!storageAvailable()) throw new Error('no-localstorage');
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    document.getElementById('saveStatus').textContent = 'ההתקדמות נשמרה בדפדפן המקומי';
+  } catch (e) {
+    document.getElementById('saveStatus').textContent = 'השמירה המקומית מוגבלת במכשיר הזה — השתמשי גם בקוד גיבוי';
+  }
+}
+function loadState(){
+  try {
+    if (!storageAvailable()) throw new Error('no-localstorage');
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      document.getElementById('saveStatus').textContent = 'אין עדיין שמירה מקומית';
+      return;
+    }
+    const saved = JSON.parse(raw);
+    Object.assign(state, saved);
+    document.getElementById('saveStatus').textContent = 'נטענה התקדמות שמורה';
+  } catch (e) {
+    document.getElementById('saveStatus').textContent = 'השמירה המקומית מוגבלת במכשיר הזה — אפשר לשחזר מקוד גיבוי';
+  }
+}
+function makeBackupCode(){
+  const payload = {
+    version: 1,
+    createdAt: new Date().toISOString(),
+    state: state
+  };
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+function restoreFromBackupCode(code){
+  const raw = decodeURIComponent(escape(atob(code.trim())));
+  const parsed = JSON.parse(raw);
+  if (!parsed || !parsed.state) throw new Error('bad-backup');
+  Object.assign(state, parsed.state);
+  saveState();
+  setFiltersUI();
+  renderLists();
+  renderQuestion();
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    const tmp = a[i]; a[i]=a[j]; a[j]=tmp;
+  }
+  return a;
+}
+function currentQuestionIndex(){
+  return state.filteredOrder[state.current] ?? null;
+}
+function applyFilters(){
+  const search = state.filters.search.trim();
+  state.filteredOrder = state.order.filter(function(i){
+    const q = QUESTIONS[i];
+    if (state.filters.chapter !== '__all__' && q.chapter !== state.filters.chapter) return false;
+    if (state.filters.topic !== '__all__' && q.topic !== state.filters.topic) return false;
+    if (search && !(q.question.includes(search) || q.topic.includes(search) || q.chapter.includes(search))) return false;
+    if (state.mistakesOnly){
+      if (!state.evaluated[i]) return false;
+      if (state.correctMap[i] === true) return false;
+    }
+    if (state.unansweredOnly && state.answers[i] !== undefined) return false;
+    return true;
+  });
+  if (state.current >= state.filteredOrder.length) state.current = Math.max(0, state.filteredOrder.length-1);
+}
+function stats(){
+  const answered = Object.keys(state.answers).length;
+  const evaluated = Object.keys(state.evaluated).length;
+  const correct = Object.values(state.correctMap).filter(Boolean).length;
+  const mistakes = Object.values(state.correctMap).filter(function(v){ return v === false; }).length;
+  return {answered:answered, evaluated:evaluated, correct:correct, mistakes:mistakes};
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function updateMeta(){
+  const s = stats();
+  document.getElementById('totalQuestions').textContent = String(QUESTIONS.length);
+  document.getElementById('totalChapters').textContent = String(CHAPTERS.length);
+  document.getElementById('correctCount').textContent = String(s.correct);
+  document.getElementById('scorePct').textContent = s.evaluated ? String(Math.round((s.correct/s.evaluated)*100)) + '%' : '0%';
+  document.getElementById('answeredCount').textContent = String(s.answered);
+  document.getElementById('mistakesCount').textContent = String(s.mistakes);
+  const visible = state.filteredOrder.length;
+  document.getElementById('progressTextTop').textContent = 'מוצגות ' + visible + ' שאלות מתוך ' + QUESTIONS.length + ' | נענו ' + s.answered;
+  document.getElementById('progressBar').style.width = ((s.answered/QUESTIONS.length)*100).toFixed(1) + '%';
+  document.getElementById('modeLabel').textContent = state.mistakesOnly ? 'טעויות בלבד' : (state.unansweredOnly ? 'לא פתורות בלבד' : 'רגיל');
+}
+function renderLists(){
+  document.getElementById('chapterList').innerHTML = CHAPTERS.map(function(c){ return '<div class="list-item">' + esc(c) + '</div>'; }).join('');
+  document.getElementById('topicList').innerHTML = TOPICS.map(function(t){ return '<div class="list-item">' + esc(t) + '</div>'; }).join('');
+}
+function setFiltersUI(){
+  const chSel = document.getElementById('chapterFilter');
+  chSel.innerHTML = '<option value="__all__">כל הפרקים</option>' + CHAPTERS.map(function(c){ return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
+  chSel.value = state.filters.chapter;
+  const tpSel = document.getElementById('topicFilter');
+  tpSel.innerHTML = '<option value="__all__">כל הנושאים</option>' + TOPICS.map(function(t){ return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+  tpSel.value = state.filters.topic;
+  document.getElementById('searchBox').value = state.filters.search;
+}
+function showFeedback(idx){
+  const q = QUESTIONS[idx];
+  const chosen = state.answers[idx];
+  const ok = chosen === q.correct;
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback ' + (ok ? 'good' : 'bad');
+  fb.style.display = 'block';
+  fb.innerHTML = '<strong>' + (ok ? 'נכון' : 'לא נכון') + '</strong>' +
+    '<div style="margin-top:8px"><strong>התשובה הנכונה:</strong> ' + esc(q.options[q.correct]) + '</div>' +
+    '<div style="margin-top:6px"><strong>הסבר:</strong> ' + esc(q.explanation) + '</div>';
+}
+function renderQuestion(){
+  applyFilters();
+  updateMeta();
+  const idx = currentQuestionIndex();
+  const form = document.getElementById('optionsForm');
+  const fb = document.getElementById('feedbackBox');
+  if (idx === null){
+    document.getElementById('positionLabel').textContent = 'אין שאלות התואמות לסינון הנוכחי';
+    document.getElementById('questionText').textContent = 'נסי לשנות את המסננים או לכבות מצב טעויות בלבד.';
+    document.getElementById('chapterBadge').textContent = '—';
+    document.getElementById('topicBadge').textContent = '—';
+    document.getElementById('currentId').textContent = '—';
+    form.innerHTML = '';
+    fb.className = 'feedback'; fb.style.display = 'none';
+    return;
+  }
+  const q = QUESTIONS[idx];
+  const answered = state.answers[idx];
+  const evaluated = !!state.evaluated[idx];
+  document.getElementById('positionLabel').textContent = 'שאלה ' + (state.current+1) + ' מתוך ' + state.filteredOrder.length;
+  document.getElementById('chapterBadge').textContent = q.chapter;
+  document.getElementById('topicBadge').textContent = q.topic;
+  document.getElementById('questionText').textContent = q.question;
+  document.getElementById('currentId').textContent = '#' + (idx+1);
+
+  form.innerHTML = q.options.map(function(opt,i){
+    let cls = 'option';
+    if (evaluated && !state.examMode){
+      if (i === q.correct) cls += ' correct';
+      else if (i === answered) cls += ' wrong';
+    }
+    const checked = answered===i ? ' checked' : '';
+    return '<label class="' + cls + '"><input type="radio" name="answer" value="' + i + '"' + checked + '><span>' + esc(opt) + '</span></label>';
+  }).join('');
+
+  fb.className = 'feedback'; fb.style.display = 'none';
+  if (evaluated && !state.examMode) showFeedback(idx);
+
+  document.getElementById('prevBtn').disabled = state.current <= 0;
+  document.getElementById('nextBtn').disabled = state.current >= state.filteredOrder.length-1;
+}
+function evaluateCurrent(){
+  const idx = currentQuestionIndex();
+  if (idx === null) return;
+  const checked = document.querySelector('input[name="answer"]:checked');
+  if (!checked){ alert('צריך לבחור תשובה לפני בדיקה.'); return; }
+  const choice = Number(checked.value);
+  state.answers[idx] = choice;
+  state.evaluated[idx] = true;
+  state.correctMap[idx] = choice === QUESTIONS[idx].correct;
+  saveState();
+  if (state.examMode){
+    state.examMode = false;
+    document.getElementById('examModeBtn').textContent = 'מצב מבחן: כבוי';
+  }
+  renderQuestion();
+}
+
+loadState();
+setFiltersUI();
+renderLists();
+renderQuestion();
+
+document.getElementById('submitBtn').addEventListener('click', evaluateCurrent);
+document.getElementById('nextBtn').addEventListener('click', function(){ if (state.current < state.filteredOrder.length-1){ state.current++; saveState(); renderQuestion(); }});
+document.getElementById('prevBtn').addEventListener('click', function(){ if (state.current > 0){ state.current--; saveState(); renderQuestion(); }});
+document.getElementById('shuffleBtn').addEventListener('click', function(){ state.order = shuffle(state.order); state.current = 0; saveState(); renderQuestion(); });
+document.getElementById('jumpRandomBtn').addEventListener('click', function(){ if (state.filteredOrder.length){ state.current = Math.floor(Math.random()*state.filteredOrder.length); saveState(); renderQuestion(); }});
+document.getElementById('chapterFilter').addEventListener('change', function(e){ state.filters.chapter = e.target.value; state.current=0; saveState(); renderQuestion(); });
+document.getElementById('topicFilter').addEventListener('change', function(e){ state.filters.topic = e.target.value; state.current=0; saveState(); renderQuestion(); });
+document.getElementById('searchBox').addEventListener('input', function(e){ state.filters.search = e.target.value; state.current=0; saveState(); renderQuestion(); });
+document.getElementById('mistakesBtn').addEventListener('click', function(){ state.mistakesOnly=!state.mistakesOnly; if (state.mistakesOnly) state.unansweredOnly=false; this.textContent = state.mistakesOnly ? 'תרגל רק טעויות: פעיל' : 'תרגל רק טעויות'; state.current=0; saveState(); renderQuestion(); });
+document.getElementById('examModeBtn').addEventListener('click', function(){ state.examMode=!state.examMode; this.textContent = state.examMode ? 'מצב מבחן: פעיל' : 'מצב מבחן: כבוי'; saveState(); renderQuestion(); });
+document.getElementById('toggleAnsweredBtn').addEventListener('click', function(){ state.unansweredOnly=!state.unansweredOnly; if (state.unansweredOnly) state.mistakesOnly=false; this.textContent = state.unansweredOnly ? 'הצג רק לא פתורות: פעיל' : 'הצג רק לא פתורות'; state.current=0; saveState(); renderQuestion(); });
+document.getElementById('resetBtn').addEventListener('click', function(){ if (!confirm('לאפס את כל ההתקדמות והשמירה המקומית?')) return; localStorage.removeItem(STORAGE_KEY); location.reload(); });
+
+document.getElementById('copyBackupBtn').addEventListener('click', async function(){
+  try {
+    const code = makeBackupCode();
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(code);
+      alert('קוד הגיבוי הועתק ללוח. מומלץ לשמור אותו בפתק או בקובץ.');
+      return;
+    }
+    window.prompt('העתיקי ושמרי את קוד הגיבוי:', code);
+  } catch (e) {
+    alert('לא ניתן היה ליצור קוד גיבוי.');
+  }
+});
+document.getElementById('restoreBackupBtn').addEventListener('click', function(){
+  const code = window.prompt('הדביקי כאן קוד גיבוי ששמרת:');
+  if (!code) return;
+  try {
+    restoreFromBackupCode(code);
+    alert('השחזור הושלם.');
+  } catch (e) {
+    alert('קוד הגיבוי לא תקין או לא תואם.');
+  }
+});
+window.addEventListener('pagehide', saveState);
+document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') saveState(); });
+
+document.getElementById('optionsForm').addEventListener('change', function(e){
+  if (e.target.name !== 'answer') return;
+  const idx = currentQuestionIndex();
+  if (idx === null) return;
+  state.answers[idx] = Number(e.target.value);
+  if (!state.examMode){
+    state.evaluated[idx] = true;
+    state.correctMap[idx] = state.answers[idx] === QUESTIONS[idx].correct;
+  }
+  saveState();
+  renderQuestion();
+});
+</script>
+
+<div class="install-sheet" id="installSheet" aria-hidden="true">
+  <div class="install-card">
+    <h3>הוספה למסך הבית באייפון</h3>
+    <p>כך זה יעבוד כמעט כמו אפליקציה:</p>
+    <ol>
+      <li>פתחי את הקובץ ב-Safari.</li>
+      <li>לחצי על כפתור השיתוף של Safari.</li>
+      <li>בחרי <strong>הוסף למסך הבית</strong>.</li>
+      <li>פתחי אחר כך מהאייקון שעל המסך הראשי.</li>
+    </ol>
+    <p class="hint">מומלץ להשאיר מדי פעם קוד גיבוי, במיוחד אם את עובדת ממספר מכשירים.</p>
+    <div class="row">
+      <button class="primary" id="closeInstallBtn" type="button">סגור</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
